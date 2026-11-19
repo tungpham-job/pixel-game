@@ -1052,7 +1052,7 @@ const ZONES = [
   {
     name: "Vùng 3 · Quảng trường Bình Luận", games: [g3A, g3B, g3C, g3D], n: [2, 2, 2, 4], emoji: "💬", welcome: "Quảng trường đông vui, ai cũng đang bình luận. Đội mình giúp Pixel ứng xử thật tử tế nhé!",
     lesson: "Em không phải im lặng nhìn bạn bị bắt nạt. Em có thể giúp bạn bằng cách <b>KỂ</b> với người lớn, và nói lời tử tế.",
-    hidden: { title: "Có người dọa đăng ảnh", text: "Có người dọa sẽ đăng ảnh của Pixel nếu không gửi ảnh riêng tư. Đội mình xử lý sao?", m: {
+    hidden: { list: [{ title: "Có người dọa đăng ảnh", text: "Có người dọa sẽ đăng ảnh của Pixel nếu không gửi ảnh riêng tư. Đội mình xử lý sao?", m: {
       q: "Một người trên mạng nói: “Nếu em không gửi ảnh riêng tư, anh sẽ đăng ảnh em lên mạng.” Chọn <u>3 việc nên làm</u>", need: 3,
       g: "Giỏi quá! Không gửi, giữ bằng chứng và kể với người lớn. Em không có lỗi, và người lớn luôn sẵn sàng giúp.",
       o: [
@@ -1060,7 +1060,52 @@ const ZONES = [
         { t: "Gửi một tấm thôi cho xong chuyện", h: "Gửi một tấm thì họ sẽ đòi thêm. Không gửi nhé!" },
         { t: "Xóa hết tin nhắn và giấu", h: "Giữ bằng chứng giúp người lớn xử lý. Đừng giấu nhé." },
         { t: "Dọa lại để họ sợ", h: "Đáp trả có thể làm chuyện nguy hiểm hơn. Hãy nhờ người lớn." }
+      ] } },
+    { title: "Rủ gặp ngoài đời", text: "Một người quen trên mạng rủ Pixel gặp ngoài đời và dặn đừng nói với bố mẹ. Đội mình xử lý sao?", m: {
+      q: "Người đó nhắn: “Anh muốn gặp em, nhưng đừng nói với bố mẹ nhé.” Chọn <u>3 việc nên làm</u>", need: 3,
+      g: "Giỏi quá! Không đi gặp, không giữ bí mật và kể với người lớn. Người tốt sẽ không bắt em giấu bố mẹ.",
+      o: [
+        { t: "Không đi gặp", ok: 1 },
+        { t: "Không giữ bí mật, kể ngay với bố mẹ hoặc cô giáo", ok: 1 },
+        { t: "Chặn và không nhắn tin lại", ok: 1 },
+        { t: "Đi gặp một lần xem sao", h: "Người quen trên mạng có thể không phải người như họ nói. Không đi gặp nhé." },
+        { t: "Hứa giữ bí mật vì họ đã nhờ", h: "Người tốt sẽ không bắt em giấu bố mẹ. Bí mật kiểu này rất nguy hiểm." },
+        { t: "Gửi địa chỉ để họ đến đón", h: "Không bao giờ cho người lạ địa chỉ nhà hay trường học." }
+      ] } },
+    { title: "Mạo danh bạn thân xin mã OTP", text: "Một tài khoản giống hệt bạn thân nhắn nhờ Pixel gửi mã xác nhận vừa về điện thoại. Đội mình xử lý sao?", m: {
+      q: "Tài khoản giống bạn thân nhắn: “Cho mình mã xác nhận vừa gửi về điện thoại bạn gấp nhé!” Chọn <u>3 việc nên làm</u>", need: 3,
+      g: "Giỏi quá! Mã xác nhận như chìa khóa tài khoản của em, không đưa cho ai, và luôn hỏi lại bạn trực tiếp cho chắc.",
+      o: [
+        { t: "Không gửi mã cho ai", ok: 1 },
+        { t: "Gọi điện hoặc hỏi trực tiếp bạn để xác nhận", ok: 1 },
+        { t: "Báo với bố mẹ hoặc cô giáo", ok: 1 },
+        { t: "Gửi mã vì là bạn thân", h: "Tài khoản đó có thể là kẻ mạo danh. Mã xác nhận không được đưa cho ai." },
+        { t: "Gửi mã rồi dặn bạn đừng làm bậy", h: "Gửi mã là bị chiếm tài khoản rồi. Tuyệt đối không gửi nhé." },
+        { t: "Chỉ nhắn lại qua chính tài khoản đó để hỏi", h: "Tài khoản đó chưa chắc là bạn thật. Hãy gọi hoặc gặp bạn trực tiếp." }
+      ] } },
+    { title: "Công an gọi điện lạ", text: "Có người xưng là công an gọi cho Pixel, nói liên quan đến vụ án và đòi giữ bí mật. Đội mình xử lý sao?", m: {
+      q: "Một người xưng là công an gọi điện: “Em liên quan đến một vụ án, không được nói với ai và phải cung cấp thông tin cá nhân.” Chọn <u>3 việc nên làm</u>", need: 3,
+      g: "Giỏi quá! Tắt máy, không bấm link, không cài ứng dụng lạ và báo ngay với người lớn. Đó là chiêu lừa đảo.",
+      o: [
+        { t: "Tắt máy và ngắt liên lạc", ok: 1 },
+        { t: "Không bấm link và không cài ứng dụng lạ", ok: 1 },
+        { t: "Báo với cha mẹ, người lớn", ok: 1 },
+        { t: "Cung cấp thông tin cá nhân để làm rõ vụ án", h: "Công an không đòi thông tin cá nhân qua điện thoại như vậy. Đây là lừa đảo." },
+        { t: "Giữ bí mật theo yêu cầu, không nói với ai", h: "Kẻ lừa đảo luôn bắt giữ bí mật. Hãy kể ngay với người lớn." },
+        { t: "Làm theo hướng dẫn của họ cho nhanh xong chuyện", h: "Họ cố hối thúc để em không kịp suy nghĩ. Hãy tắt máy nhé." }
+      ] } },
+    { title: "Shipper giao đơn hàng lạ", text: "Có shipper gọi điện báo giao một đơn hàng lạ, miễn phí cho Pixel. Đội mình xử lý sao?", m: {
+      q: "Shipper gọi: “Có đơn hàng miễn phí gửi cho em, ra nhận ngay nhé!” Nhưng em không hề đặt hàng. Chọn <u>3 việc nên làm</u>", need: 3,
+      g: "Giỏi quá! Không nhận hàng không rõ nguồn gốc và báo ngay với người lớn. Hàng lạ miễn phí thường là chiêu lừa.",
+      o: [
+        { t: "Tuyệt đối không nhận gói hàng không rõ nguồn gốc", ok: 1 },
+        { t: "Báo với cha mẹ, người lớn", ok: 1 },
+        { t: "Không đọc mã hay chuyển tiền cho shipper", ok: 1 },
+        { t: "Nhận hàng vì được miễn phí", h: "Hàng lạ miễn phí có thể là chiêu lừa hoặc bị đòi tiền sau. Không nhận nhé." },
+        { t: "Ra nhận rồi mở xem thử", h: "Gói lạ có thể kèm bẫy lừa đảo. Đừng nhận và đừng mở." },
+        { t: "Đọc địa chỉ nhà để shipper giao tận nơi", h: "Không cho người lạ địa chỉ nhà. Hãy hỏi người lớn." }
       ] } }
+    ] }
   }
 ];
 let TOTAL = 0;
@@ -1093,13 +1138,13 @@ function runZone(zi) {
   });
 }
 function hiddenChallenge(zi) {
-  const Z = ZONES[zi];
-  multiPick({
-    zi, hidden: 1, title: Z.hidden.title, intro: narrator("happy", Z.hidden.text), endLabel: "Hoàn thành ▶",
-    next() {
-      state.hd[zi] = true; good(); zoneEnd(zi);
-    }
-  }, Z.hidden.m);
+  const L = ZONES[zi].hidden.list; let k = 0;
+  const finish = () => { state.hd[zi] = true; good(); zoneEnd(zi); };
+  const show = () => {
+    const h = L[k], last = k === L.length - 1;
+    multiPick({ zi, hidden: 1, title: `Thử thách ẩn ${k + 1}/${L.length} · ${h.title}`, intro: narrator("happy", h.text), endLabel: "Hoàn thành ▶", next: finish }, h.m, last ? null : () => { k++; show(); });
+  };
+  show();
 }
 function zoneEnd(zi) {
   const Z = ZONES[zi];
