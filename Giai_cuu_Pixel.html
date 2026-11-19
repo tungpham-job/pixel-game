@@ -1087,7 +1087,7 @@ function runZone(zi) {
     const step = () => {
       if (i >= Z.games.length) { zoneEnd(zi); return; }
       const idx = i++;
-      Z.games[idx]({ zi, next: step, endLabel: idx === Z.games.length - 1 ? "Nhận mảnh chìa khóa ▶" : "Trò chơi tiếp theo ▶" });
+      Z.games[idx]({ zi, next: step, endLabel: idx === Z.games.length - 1 ? "Nhận mảnh chìa khóa ▶" : "Câu tiếp ▶" });
     };
     step();
   });
