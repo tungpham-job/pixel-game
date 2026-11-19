@@ -1203,8 +1203,8 @@ function door(open) {
 }
 function gate() {
   const s = screen(`<div class="card center"><span class="zone">Cổng cuối</span>
-    <div style="display:flex;justify-content:center;align-items:center;gap:30px;margin:8px 0"><div class="keyfloat">${fullKey(260)}</div>${door(false)}</div>
-    <div class="quote">Pixel ra tới cửa cuối, nhưng cửa chỉ mở khi cả đội có <b>người tin cậy</b>…</div>
+    <div style="display:flex;justify-content:center;margin:8px 0">${door(false)}</div>
+    <div class="quote">Cổng chỉ mở khi cả đội có <b>người tin cậy</b>…</div>
     <div class="ask">🌳 Chúng mình hãy cùng làm <b>Cây tin cậy</b>. Khi xong sẽ nhận được mật khẩu để mở cửa nhé!</div>
     <p style="margin-top:22px"><button class="btn" id="op">🔐 Mở cổng</button></p></div>`);
   $("#op", s).onclick = () => openPin(rescue, "Nhập mã để mở cổng");
