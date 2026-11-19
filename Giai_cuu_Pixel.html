@@ -111,6 +111,17 @@ input[type=text]:focus{outline:none;border-color:var(--blue)}
 /* reward */
 .reward{text-align:center}
 .reward .piece{display:inline-block;animation:pop .8s}
+main:has(.reward){max-width:1280px}
+.rw{display:grid;grid-template-columns:1fr 1.15fr;gap:32px;align-items:center;text-align:left;margin-top:6px}
+.rw .l{text-align:center}
+.rw .skn{font-size:26px;font-weight:800;margin:6px 0 0}
+.rw .mini{display:flex;justify-content:center;gap:8px;margin-top:12px}
+.rw .mini span{width:56px;height:14px;border-radius:5px;background:#eef1f8;border:1.5px dashed #b9c6e0}
+.rw .mini span.on{border:0}
+.rw .q{font-size:30px;font-weight:700;line-height:1.55}
+.rw .q b{color:var(--red)}
+.rw .note{margin-top:14px;background:#fff4e0;color:#8a5200;border-radius:14px;padding:10px 16px;font-size:20px;font-weight:700}
+@media(max-width:900px){.rw{grid-template-columns:1fr;text-align:center}.rw .q{font-size:24px}}
 .ask{background:#eaf6ff;border:2px dashed #7bb7ef;border-radius:18px;padding:12px 18px;margin:16px auto;max-width:640px;font-weight:700}
 .assemble{display:flex;justify-content:center;gap:70px;transition:gap 1s ease .4s;margin:10px 0}
 .assemble.joined{gap:0}
@@ -500,11 +511,12 @@ function rewardBlock(parent, i, o) {
   if (first) { good(); setTimeout(good, 350); }
   const need = o.hidden && !o.hiddenDone;
   const b = append(parent, `<div class="reward"><h2>🎉 Mảnh chìa khóa ${i + 1}/3</h2>
-    <div class="piece">${piece(i, 150)}</div>
-    <h3 style="margin-top:6px">“${esc(SKILLS[i])}”</h3>
-    <p>${o.lesson}</p>
-    ${need ? '<p style="font-weight:800">Còn một <u>Thử thách ẩn</u> cuối cùng đang chờ đội mình!</p>' : ""}
-    ${o.hiddenDone ? '<p style="font-weight:800">🏅 Đội mình đã hoàn thành Thử thách ẩn!</p>' : ""}
+    <div class="rw"><div class="l"><div class="piece">${piece(i, 170)}</div>
+      <div class="skn">“${esc(SKILLS[i])}”</div>
+      <div class="mini">${[0, 1, 2].map(j => `<span class="${state.keys[j] ? "on" : ""}" style="${state.keys[j] ? "background:" + KCOL[j] : ""}"></span>`).join("")}</div></div>
+      <div><div class="q">${o.lesson}</div>
+        ${need ? '<div class="note">Còn một <u>Thử thách ẩn</u> cuối cùng đang chờ đội mình!</div>' : ""}
+        ${o.hiddenDone ? '<div class="note">🏅 Đội mình đã hoàn thành Thử thách ẩn!</div>' : ""}</div></div>
     <div style="margin-top:14px">${need
       ? '<button class="btn" style="background:#8e44ad;box-shadow:0 5px 0 #6c3483" id="hd">⭐ Thử thách ẩn ▶</button>'
       : `<button class="btn green" id="nx">${o.label} ▶</button>`}</div></div>`);
