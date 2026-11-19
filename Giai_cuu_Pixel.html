@@ -16,8 +16,8 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:6px 
 .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px}
 .team{position:absolute;left:50%;top:0;height:72px;transform:translateX(-50%);display:flex;flex-direction:column;justify-content:center;max-width:34vw;text-align:center;font-weight:700;color:var(--soft)}
 #keys{margin-left:auto}
-.fac{margin-left:16px}
-@media (max-width:1500px){header:has(.fac.on) .team{position:static;transform:none;height:auto;max-width:none;flex:1;min-width:140px}header:has(.fac.on) #keys{margin-left:0}}
+.fac{margin-left:4px}
+@media (max-width:1500px){.fac{gap:6px}.fac .ftag{font-size:12px;padding:2px 8px}.fac .fbtn{font-size:14px;padding:4px 10px}header:has(.fac.on) .team{max-width:max(180px,calc(100vw - 1120px))}}
 #keys{display:flex;gap:10px}
 .slot{width:84px;text-align:center;font-size:12px;line-height:1.2;color:var(--soft);font-weight:600}
 .slot .box{width:48px;height:48px;margin:0 auto 2px;border-radius:16px;border:3px dashed #b9c6e0;background:#f4f7fd;display:grid;place-items:center;font-size:28px;color:#b9c6e0;font-weight:800}
@@ -169,7 +169,6 @@ input[type=text]:focus{outline:none;border-color:var(--blue)}
 .fbtn{border:2px solid var(--line);background:#fff;border-radius:12px;padding:5px 14px;font-weight:800;font-size:16px;color:var(--ink)}
 .fbtn.p{background:var(--blue);border-color:var(--blue);color:#fff}
 .fbtn[disabled]{opacity:.35;cursor:not-allowed}
-.fview{font-size:13px;font-weight:700;color:#8a5200;display:none}
 #stage.past{pointer-events:none}
 .keyfloat{animation:float 2.4s ease-in-out infinite;filter:drop-shadow(0 4px 6px rgba(0,0,0,.2))}
 main:has(.rescue){max-width:1280px}
@@ -211,7 +210,7 @@ main:has(.rescue){max-width:1280px}
   <div class="brand"><span id="hpix"></span><span>Giải cứu Pixel</span></div>
   <div class="team" id="teamName"></div>
   <div class="fac" id="fac"><span class="ftag">Chế độ hỗ trợ viên</span>
-    <button class="fbtn" id="fback">◀ Quay lại</button><span class="fview" id="fview">Đang xem lại</span>
+    <button class="fbtn" id="fback">◀ Quay lại</button>
     <button class="fbtn p" id="fnext">Tiếp theo ▶</button></div>
   <div id="keys"></div>
   <button class="gear" id="gear" aria-label="Cài đặt" title="Cài đặt">⚙️</button>
@@ -330,7 +329,6 @@ function updateNavUI() {
   const past = nav.i < nav.hist.length - 1, e = nav.hist[nav.i];
   $("#fback").disabled = nav.i <= 0;
   $("#fnext").disabled = !(past || (e && e.skip));
-  $("#fview").style.display = past ? "inline" : "none";
 }
 function facNext() {
   if (nav.i < nav.hist.length - 1) { showEntry(nav.i + 1); return; }
