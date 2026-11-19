@@ -538,7 +538,7 @@ function setProg(n, zi, hidden) {
 function drawProg(n, zi, hidden) {
   const Z = ZONES[zi], pg = $("#prog"); pg.style.display = "block";
   $("#pq").style.display = hidden ? "none" : "block"; $("#ph").style.display = hidden ? "block" : "none";
-  if (hidden) { $("#phz").textContent = "⭐ Thử thách ẩn · " + Z.name; return; }
+  if (hidden) { $("#phz").textContent = "⭐ Thử thách ẩn"; return; }
   const pc = n / TOTAL * 100;
   $("#pz").textContent = Z.name; $("#pn").textContent = `Câu ${n}/${TOTAL}`;
   $("#pf").style.width = pc + "%"; $("#pxr").style.left = pc + "%";
