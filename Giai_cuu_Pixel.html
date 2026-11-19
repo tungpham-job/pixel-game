@@ -8,7 +8,7 @@
 :root{--ink:#1d2a44;--soft:#5b6b8c;--red:#e53935;--amber:#f59300;--green:#2e9e5b;--blue:#2f80ed;--card:#fff;--line:#d9e2f2}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{font:20px/1.5 "Segoe UI","Be Vietnam Pro",Roboto,system-ui,sans-serif;color:var(--ink);min-height:100vh;
+body{font:20px/1.5 "Segoe UI","Be Vietnam Pro",Roboto,system-ui,sans-serif;color:var(--ink);min-height:var(--vhpx,100vh);
   background:linear-gradient(160deg,#dff3ff 0%,#efe6ff 55%,#ffe9f1 100%);background-attachment:fixed}
 button{font:inherit;cursor:pointer}
 header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:6px 16px;padding:6px 20px 6px;background:rgba(255,255,255,.92);
@@ -1246,6 +1246,22 @@ function rescue() {
   fireworks($(".rescue", s), $(".fwcv", s));
   good(); setTimeout(() => tone([523, 659, 784, 1046, 784, 1046, 1318]), 350); confetti();
 }
+
+/* ===== CHỈ KHI MỞ / F5: đưa về kích thước tương ứng zoom 100% (không khóa; sau đó có thể zoom tự do) ===== */
+function fitZoom() {
+  const ratio = window.outerWidth / window.innerWidth, dpr = window.devicePixelRatio || 1;
+  let z = 1, best = Infinity;
+  [0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3].forEach(l => {
+    const err = Math.abs(ratio - l) / l; if (err > 0.1) return;
+    const os = dpr / l;
+    if (![1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 3].some(s => Math.abs(os - s) / s < 0.04)) return;
+    if (err < best) { best = err; z = l; }
+  });
+  const root = document.documentElement;
+  root.style.zoom = z === 1 ? "" : String(1 / z);
+  root.style.setProperty("--vhpx", z === 1 ? "100vh" : Math.round(window.innerHeight * z) + "px");
+}
+fitZoom(); window.addEventListener("load", fitZoom);
 
 /* Khi hiện nút "Câu tiếp" (sau khi trả lời đúng): tự cuộn xuống cuối trang để dễ bấm */
 new MutationObserver(ms => {
