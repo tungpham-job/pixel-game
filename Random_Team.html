@@ -23,6 +23,24 @@ input#gcount{width:64px;text-align:center;font-size:20px;padding:6px 4px;border:
 .ctlb .btn:active{transform:none;box-shadow:none;background:#1f5fb8}
 .err{position:absolute;left:50%;transform:translateX(-50%);top:100%;margin:6px 0 0;background:#fff;border:2px solid var(--red);border-radius:10px;padding:6px 14px;color:var(--red);font-weight:700;font-size:15px;display:none;box-shadow:0 6px 18px rgba(0,0,0,.15)}
 .gear{width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:#fff;font-size:22px;line-height:1;padding:0}
+.hr{margin-left:auto;display:flex;gap:8px;align-items:center}
+.hr .gear{margin-left:0}
+.hb{height:44px;border:2px solid var(--line);background:#fff;border-radius:12px;padding:0 14px;font-weight:700;font-size:15px;color:var(--ink);white-space:nowrap}
+.hb:hover{background:#f1f6ff}.hb:disabled{opacity:.4;cursor:default}
+.xw{position:relative}
+.xm{display:none;position:absolute;right:0;top:100%;margin-top:6px;background:#fff;border:2px solid var(--line);border-radius:12px;padding:4px;box-shadow:0 8px 24px rgba(0,0,0,.15);min-width:220px;z-index:30}
+.xm.on{display:block}
+.xm button{display:block;width:100%;text-align:left;border:0;background:none;padding:9px 12px;border-radius:8px;font-size:15px;font-weight:600;color:var(--ink)}
+.xm button:hover{background:#f1f6ff}
+.lsum{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px 12px;font-size:14px;color:var(--soft);margin-bottom:8px}
+.lsum .lnk{font-size:14px}
+.lhead,.lr{display:grid;grid-template-columns:56px 1fr 130px;gap:8px;align-items:center}
+.lhead{font-size:13px;color:var(--soft);font-weight:600;padding:0 4px 4px}
+#llist{max-height:50vh;overflow:auto;border-top:1px solid var(--line);margin-bottom:14px}
+.lr{padding:6px 4px;border-bottom:1px solid var(--line);font-size:16px;font-weight:600}
+.lr input[type=checkbox]{width:20px;height:20px;justify-self:center}
+.lr select{padding:5px 8px;font-size:14px}
+.lr.ab .ln{color:#98a2b8;text-decoration:line-through}.lr.ab select{opacity:.4}
 .gear:hover{background:#f1f6ff}.gear:disabled{opacity:.4;cursor:default}
 main{max-width:1500px;margin:0 auto;padding:14px 18px 80px}
 input[type=text]{font:inherit;font-weight:700;padding:10px 14px;border-radius:12px;border:3px solid var(--line);color:var(--ink);background:#fff}
@@ -81,8 +99,13 @@ select{width:100%;font:inherit;padding:9px 12px;border-radius:10px;border:2px so
   <h1>Random Team</h1>
   <div class="hinfo"><span id="info">Đang đọc randomlist.csv…</span>
     <span id="picker" style="display:none"><button class="lnk" id="pick">Chọn file randomlist.csv</button><input type="file" id="file" accept=".csv,text/csv,text/plain" style="display:none"></span></div>
-  <div class="ctlb"><span class="clb">Số nhóm</span><input type="text" id="gcount" inputmode="numeric" value="6" maxlength="3" aria-label="Số lượng nhóm"><button class="btn" id="go">Chia nhóm</button></div>
-  <button class="gear" id="gear" aria-label="Thiết lập" title="Thiết lập">⚙️</button>
+  <div class="ctlb"><span class="clb">Số nhóm</span><input type="text" id="gcount" inputmode="numeric" value="6" maxlength="3" aria-label="Số lượng nhóm"><button class="btn" id="go">Chia nhóm <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-left:2px"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+  <div class="hr">
+    <div class="xw"><button class="hb" id="xbtn" style="display:none" aria-haspopup="true">⬇ Xuất ▾</button>
+      <div class="xm" id="xmenu"><button id="xpng">🖼 Lưu ảnh PNG</button><button id="xdoc">📄 Lưu file Word (.doc)</button></div></div>
+    <button class="hb" id="lbtn" style="display:none">📋 Danh sách</button>
+    <button class="gear" id="gear" aria-label="Thiết lập" title="Thiết lập">⚙️</button>
+  </div>
   <p class="err" id="err"></p>
 </header>
 <main>
@@ -103,6 +126,15 @@ select{width:100%;font:inherit;padding:9px 12px;border-radius:10px;border:2px so
       <select id="fs"><option value="0">Nhỏ</option><option value="1">Vừa</option><option value="2">Lớn</option><option value="3">Rất lớn</option></select></div>
     <label class="chk"><input type="checkbox" id="flt">Lọc thành viên</label>
     <div class="acts"><button id="cancel">Đóng</button><button class="ok" id="save">Lưu</button></div>
+  </div>
+</div>
+<div class="modal" id="lmodal">
+  <div class="box" style="max-width:560px" role="dialog" aria-label="Danh sách lớp">
+    <h2><span>📋 Danh sách lớp</span><button id="lx" aria-label="Đóng">✕</button></h2>
+    <div class="lsum"><span id="lsum"></span><span><button class="lnk" id="la1">Chọn tất cả</button> · <button class="lnk" id="la0">Bỏ chọn tất cả</button> · <button class="lnk" id="lp0">Bỏ ghim hết</button></span></div>
+    <div class="lhead"><span style="text-align:center">Có mặt</span><span>Họ tên</span><span>Ghim vào nhóm</span></div>
+    <div id="llist"></div>
+    <div class="acts"><button class="ok" id="ldone">Xong</button></div>
   </div>
 </div>
 <div id="fxl"><div id="belt"></div><div id="drum"><span>Lồng quay</span></div></div>
@@ -153,12 +185,19 @@ function toStudents(rows) {
   }
   return rows.map(r => ({ name: (r[0] || "").trim(), g: gender(r[1]), k: (r[2] || "").trim() })).filter(s => s.name);
 }
-function setStudents(rows) {
-  STU = toStudents(rows); fitCols();
-  const m = STU.filter(s => s.g === "M").length, f = STU.filter(s => s.g === "F").length;
-  $("#info").innerHTML = STU.length ? `<b>${STU.length}</b> người (${m} nam, ${f} nữ) · <button class="lnk" id="pick2">Đổi file</button>` : "File không có tên nào. Kiểm tra cột 1 (tên). ";
-  $("#picker").style.display = STU.length ? "none" : "inline";
+let ALL = [];
+const loadAbs = () => { try { return new Set(JSON.parse(localStorage.getItem("rt_absent") || "[]")); } catch (e) { return new Set(); } };
+const saveAbs = () => { try { localStorage.setItem("rt_absent", JSON.stringify(ALL.filter(s => s.ab).map(s => s.name))); } catch (e) {} };
+function refreshSTU() {
+  STU = ALL.filter(s => !s.ab); fitCols();
+  const m = STU.filter(s => s.g === "M").length, f = STU.filter(s => s.g === "F").length, ab = ALL.length - STU.length;
+  $("#info").innerHTML = ALL.length ? `<b>${STU.length}</b> người (${m} nam, ${f} nữ)${ab ? ` · vắng ${ab}` : ""} · <button class="lnk" id="pick2">Đổi file</button>` : "File không có tên nào. Kiểm tra cột 1 (tên). ";
+  $("#picker").style.display = ALL.length ? "none" : "inline";
+  $("#lbtn").style.display = ALL.length ? "" : "none";
   const p2 = $("#pick2"); if (p2) p2.onclick = () => $("#file").click();
+}
+function setStudents(rows) {
+  const ab = loadAbs(); ALL = toStudents(rows); ALL.forEach(s => { s.ab = ab.has(s.name); s.pin = 0; }); refreshSTU();
 }
 function loadFile(f) { const rd = new FileReader(); rd.onload = () => setStudents(parseCSV(rd.result)); rd.readAsText(f, "utf-8"); }
 fetch("randomlist.csv", { cache: "no-store" }).then(r => { if (!r.ok) throw 0; return r.text(); }).then(t => setStudents(parseCSV(t)))
@@ -170,14 +209,18 @@ $("#file").onchange = e => { if (e.target.files[0]) loadFile(e.target.files[0]);
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function divide(stu, G) {
   const groups = Array.from({ length: G }, () => []);
-  const items = [];
+  const items = [], pg = s => (s.pin >= 1 && s.pin <= G ? s.pin - 1 : -1);
   if (S.filter) {
     const map = new Map();
     stu.forEach(s => {
       if (s.k) { if (!map.has(s.k)) { const it = { m: [] }; map.set(s.k, it); items.push(it); } map.get(s.k).m.push(s); }
       else items.push({ m: [s] });
     });
-  } else stu.forEach(s => items.push({ m: [s] }));
+    for (let i = items.length - 1; i >= 0; i--) {
+      const it = items[i], pm = it.m.filter(s => pg(s) >= 0);
+      if (pm.length) { pm.forEach(s => groups[pg(s)].push(s)); const to = pg(pm[0]); it.m.filter(s => pg(s) < 0).forEach(s => groups[to].push(s)); items.splice(i, 1); }
+    }
+  } else stu.forEach(s => { if (pg(s) >= 0) groups[pg(s)].push(s); else items.push({ m: [s] }); });
   items.forEach(it => { const im = it.m.filter(s => s.g === "M").length, iF = it.m.filter(s => s.g === "F").length; it.g = im > iF ? "M" : iF > im ? "F" : (im ? "M" : "?"); });
   const all = [...Array(G).keys()]; let pool = { M: all, F: all, "?": all };
   if (S.sex === "sep" && G > 1) {
@@ -211,6 +254,7 @@ function renderGroups(groups) {
       <ul class="glist">${g.map(s => `<li class="mem" data-name="${esc(s.name)}"><span class="grip"></span><span class="mn">${esc(s.name)}</span></li>`).join("")}</ul>`;
     w.appendChild(d);
   });
+  $("#xbtn").style.display = "inline-block";
   w.querySelectorAll(".gname,.gnote").forEach(inp => inp.addEventListener("keydown", e => { if (e.key === "Enter") inp.blur(); }));
 }
 const updCounts = () => document.querySelectorAll(".grp").forEach(g => { $(".gc", g).textContent = g.querySelectorAll(".mem").length; });
@@ -331,14 +375,16 @@ function finishFx(skip) {
 $("#skip").onclick = () => finishFx(true);
 
 /* ===== NÚT BẮT ĐẦU ===== */
-function setBusy(b) { $("#go").disabled = b; $("#gear").disabled = b; $("#gcount").disabled = b; }
+function setBusy(b) { $("#go").disabled = b; $("#gear").disabled = b; $("#gcount").disabled = b; $("#lbtn").disabled = b; $("#xbtn").disabled = b; }
 $("#go").onclick = () => {
   const err = $("#err"); err.style.display = "none";
   const fail = m => { err.textContent = m; err.style.display = "block"; clearTimeout(fail.t); fail.t = setTimeout(() => { err.style.display = "none"; }, 5000); };
-  if (!STU.length) { fail("Chưa có danh sách. Hãy chọn file randomlist.csv."); return; }
+  if (!STU.length) { fail(ALL.length ? "Tất cả đang vắng mặt. Mở Danh sách để chọn lại." : "Chưa có danh sách. Hãy chọn file randomlist.csv."); return; }
   const G = parseInt($("#gcount").value, 10);
   if (!G || G < 1) { fail("Nhập số lượng nhóm (từ 1 trở lên)."); return; }
   if (G > STU.length) { fail(`Số nhóm lớn hơn số người (${STU.length}). Hãy nhập số nhỏ hơn.`); return; }
+  const bad = STU.find(s => s.pin > G); if (bad) { fail(`${bad.name} đang ghim vào nhóm ${bad.pin}, lớn hơn số nhóm. Sửa trong Danh sách.`); return; }
+  $("#xmenu").classList.remove("on");
   try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); AC.resume && AC.resume(); } catch (e) {}
   renderGroups(divide(STU, G)); $("#hint").style.display = "block"; setBusy(true);
   const first = $("#groups").firstElementChild; if (first) first.scrollIntoView({ block: "nearest" });
@@ -377,13 +423,84 @@ function endDrag() {
 }
 document.addEventListener("pointerup", endDrag); document.addEventListener("pointercancel", endDrag);
 
+/* ===== DANH SÁCH LỚP: VẮNG MẶT + GHIM NHÓM ===== */
+const lmodal = $("#lmodal");
+function lsum() { const p = ALL.filter(s => !s.ab); $("#lsum").textContent = `Có mặt ${p.length}/${ALL.length} · Đã ghim ${p.filter(s => s.pin > 0).length}`; }
+function openList() {
+  let G = parseInt($("#gcount").value, 10); if (!G || G < 1) G = 10; G = Math.min(G, 99);
+  const L = $("#llist"); L.innerHTML = "";
+  ALL.forEach(s => {
+    const r = document.createElement("div"); r.className = "lr" + (s.ab ? " ab" : "");
+    const mx = Math.max(G, s.pin || 0); let o = '<option value="0">Không ghim</option>'; for (let i = 1; i <= mx; i++) o += `<option value="${i}"${s.pin === i ? " selected" : ""}>Nhóm ${i}</option>`;
+    r.innerHTML = `<input type="checkbox" aria-label="Có mặt"${s.ab ? "" : " checked"}><span class="ln">${esc(s.name)}</span><select aria-label="Ghim vào nhóm"${s.ab ? " disabled" : ""}>${o}</select>`;
+    const ck = $("input", r), sel = $("select", r);
+    ck.onchange = () => { s.ab = !ck.checked; r.classList.toggle("ab", s.ab); sel.disabled = s.ab; saveAbs(); refreshSTU(); lsum(); };
+    sel.onchange = () => { s.pin = +sel.value; lsum(); };
+    L.appendChild(r);
+  });
+  lsum(); lmodal.classList.add("on");
+}
+const closeList = () => lmodal.classList.remove("on");
+$("#lbtn").onclick = openList; $("#lx").onclick = closeList; $("#ldone").onclick = closeList;
+lmodal.addEventListener("pointerdown", e => { if (e.target === lmodal) closeList(); });
+$("#la1").onclick = () => { ALL.forEach(s => s.ab = false); saveAbs(); refreshSTU(); openList(); };
+$("#la0").onclick = () => { ALL.forEach(s => s.ab = true); saveAbs(); refreshSTU(); openList(); };
+$("#lp0").onclick = () => { ALL.forEach(s => s.pin = 0); openList(); };
+
+/* ===== XUẤT KẾT QUẢ (PNG / .doc) ===== */
+function collect() {
+  return [...document.querySelectorAll(".grp")].map((g, i) => ({ i: i + 1, name: $(".gname", g).value.trim(), note: $(".gnote", g).value.trim(), m: [...g.querySelectorAll(".mem")].map(li => li.dataset.name) }));
+}
+function stamp() { const d = new Date(), p = n => String(n).padStart(2, "0"); return { vn: `${p(d.getDate())}/${p(d.getMonth() + 1)}/${d.getFullYear()}`, f: `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}` }; }
+function dl(blob, fn) { const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = fn; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); }
+const gTitle = g => g.name ? `${g.i}. ${g.name}` : `Nhóm ${g.i}`;
+function exportPNG() {
+  const G = collect(); if (!G.length) return;
+  const t = stamp(), n = G.reduce((a, g) => a + g.m.length, 0), FF = getComputedStyle(document.body).fontFamily;
+  const W = 1754, M = 60, gap = 24, cols = G.length <= 3 ? G.length : G.length <= 6 ? 3 : 4, cw = (W - 2 * M - gap * (cols - 1)) / cols, ROW = 40, HH = 62;
+  const hs = G.map(g => HH + (g.note ? 36 : 0) + g.m.length * ROW + 14), pos = []; let y = 160;
+  for (let r = 0; r * cols < G.length; r++) { const rh = Math.max(...hs.slice(r * cols, r * cols + cols)); for (let k = 0; k < cols && r * cols + k < G.length; k++) pos.push({ x: M + k * (cw + gap), y, h: rh }); y += rh + gap; }
+  const c = document.createElement("canvas"); c.width = W; c.height = Math.ceil(y - gap + M); const x = c.getContext("2d");
+  const fit = (txt, w, sz, wt) => { let f = sz; for (; f > 14; f--) { x.font = `${wt} ${f}px ${FF}`; if (x.measureText(txt).width <= w) break; } x.font = `${wt} ${f}px ${FF}`; };
+  x.fillStyle = "#fff"; x.fillRect(0, 0, W, c.height); x.textBaseline = "middle";
+  x.fillStyle = "#1d2a44"; x.textAlign = "center"; x.font = `800 46px ${FF}`; x.fillText("Kết quả chia nhóm", W / 2, 70);
+  x.fillStyle = "#5b6b8c"; x.font = `600 24px ${FF}`; x.fillText(`${t.vn} · ${n} người · ${G.length} nhóm`, W / 2, 116);
+  G.forEach((g, i) => {
+    const q = pos[i];
+    x.beginPath(); x.roundRect(q.x, q.y, cw, q.h, 16); x.fillStyle = "#fff"; x.fill(); x.lineWidth = 2; x.strokeStyle = "#d9e2f2"; x.stroke();
+    x.save(); x.beginPath(); x.roundRect(q.x, q.y, cw, q.h, 16); x.clip();
+    x.fillStyle = BG[i % 8]; x.fillRect(q.x, q.y, cw, HH);
+    x.fillStyle = FG[i % 8]; x.fillRect(q.x, q.y, 8, q.h);
+    x.textAlign = "right"; x.fillStyle = "#000"; x.font = `600 22px ${FF}`; x.fillText(String(g.m.length), q.x + cw - 16, q.y + HH / 2);
+    x.textAlign = "left"; x.fillStyle = FG[i % 8]; fit(gTitle(g), cw - 90, 28, 800); x.fillText(gTitle(g), q.x + 24, q.y + HH / 2);
+    let yy = q.y + HH;
+    if (g.note) { x.fillStyle = "#fffbe6"; x.fillRect(q.x, yy, cw, 36); x.fillStyle = "#7a6a1f"; fit(g.note, cw - 40, 20, "italic 600"); x.fillText(g.note, q.x + 24, yy + 18); yy += 36; }
+    g.m.forEach(nm => { x.fillStyle = "#d9e2f2"; x.fillRect(q.x + 8, yy, cw - 8, 1); x.fillStyle = "#1d2a44"; fit(nm, cw - 48, 25, 600); x.fillText(nm, q.x + 24, yy + ROW / 2 + 1); yy += ROW; });
+    x.restore();
+  });
+  c.toBlob(b => dl(b, `Ket_qua_chia_nhom_${t.f}.png`), "image/png");
+}
+function exportDoc() {
+  const G = collect(); if (!G.length) return;
+  const t = stamp(), n = G.reduce((a, g) => a + g.m.length, 0), cols = 3; let rows = "";
+  for (let i = 0; i < G.length; i += cols) {
+    rows += "<tr>"; for (let k = 0; k < cols; k++) { const g = G[i + k]; rows += g ? `<td><b>${esc(gTitle(g))}</b> <span style="color:#5b6b8c">(${g.m.length} người)</span><br>${g.note ? `<i style="color:#7a6a1f">${esc(g.note)}</i><br>` : ""}${g.m.map((m, j) => `${j + 1}. ${esc(m)}`).join("<br>")}</td>` : "<td></td>"; } rows += "</tr>";
+  }
+  const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>Kết quả chia nhóm</title><style>@page{size:29.7cm 21cm;mso-page-orientation:landscape;margin:1.5cm}body{font-family:Calibri,Arial,sans-serif;font-size:13pt}h1{text-align:center;font-size:22pt;margin:0}p.s{text-align:center;color:#5b6b8c;margin:2pt 0 12pt}table{border-collapse:collapse;width:100%}td{vertical-align:top;border:1pt solid #9aa9c6;padding:6pt 8pt;width:33%}</style></head><body><h1>Kết quả chia nhóm</h1><p class="s">${t.vn} · ${n} người · ${G.length} nhóm</p><table>${rows}</table></body></html>`;
+  dl(new Blob(["\ufeff", html], { type: "application/msword;charset=utf-8" }), `Ket_qua_chia_nhom_${t.f}.doc`);
+}
+$("#xbtn").onclick = e => { e.stopPropagation(); $("#xmenu").classList.toggle("on"); };
+$("#xpng").onclick = () => { $("#xmenu").classList.remove("on"); exportPNG(); };
+$("#xdoc").onclick = () => { $("#xmenu").classList.remove("on"); exportDoc(); };
+document.addEventListener("click", e => { if (!e.target.closest(".xw")) $("#xmenu").classList.remove("on"); });
+
 /* ===== CỬA SỔ THIẾT LẬP ===== */
 const modal = $("#modal");
 function openSet() { $("#fs").value = S.fs; $("#sex").value = S.sex; $("#secs").value = S.secs; $("#fx").value = S.fx; $("#flt").checked = S.filter; modal.classList.add("on"); }
 const closeSet = () => modal.classList.remove("on");
 $("#gear").onclick = openSet; $("#x").onclick = closeSet; $("#cancel").onclick = closeSet;
 modal.addEventListener("pointerdown", e => { if (e.target === modal) closeSet(); });
-document.addEventListener("keydown", e => { if (e.key === "Escape") closeSet(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") { closeSet(); closeList(); } });
 $("#save").onclick = () => {
   S.sex = $("#sex").value; S.fx = +$("#fx").value; S.fs = +$("#fs").value; applyFs(); S.filter = $("#flt").checked;
   const v = parseInt($("#secs").value, 10); S.secs = v >= 1 ? Math.min(v, 300) : 15;
