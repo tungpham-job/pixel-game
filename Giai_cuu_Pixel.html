@@ -1222,14 +1222,19 @@ function rescue() {
 
 /* ===== TỰ ĐƯA VỀ TỈ LỆ 100% khi trình duyệt đang zoom ===== */
 function fitZoom() {
-  const ratio = window.outerWidth / window.innerWidth;
-  let z = 1;
-  [0.5, 0.67, 0.75, 0.8, 0.9, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3].forEach(l => { if (Math.abs(ratio - l) / l < 0.04) z = l; });
+  const ratio = window.outerWidth / window.innerWidth, dpr = window.devicePixelRatio || 1;
+  let z = 1, best = Infinity;
+  [0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3].forEach(l => {
+    const err = Math.abs(ratio - l) / l; if (err > 0.1) return;
+    const os = dpr / l;
+    if (![1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 3].some(s => Math.abs(os - s) / s < 0.04)) return;
+    if (err < best) { best = err; z = l; }
+  });
   const root = document.documentElement;
   root.style.zoom = z === 1 ? "" : String(1 / z);
   root.style.setProperty("--vhpx", z === 1 ? "100vh" : Math.round(window.innerHeight * z) + "px");
 }
-fitZoom(); window.addEventListener("resize", fitZoom);
+fitZoom(); window.addEventListener("resize", fitZoom); window.addEventListener("load", fitZoom);
 
 /* Hỏi lại khi bấm F5 / đóng tab giữa chừng (từ lúc đội đã nhập tên đến khi giải cứu xong) */
 window.addEventListener("beforeunload", e => {
