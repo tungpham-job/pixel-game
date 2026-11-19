@@ -34,9 +34,9 @@ input#gcount{width:64px;text-align:center;font-size:20px;padding:6px 4px;border:
 .xm button:hover{background:#f1f6ff}
 .lsum{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px 12px;font-size:14px;color:var(--soft);margin-bottom:8px}
 .lsum .lnk{font-size:14px}
-#llist{max-height:68vh;overflow:auto;border-top:1px solid var(--line);margin-bottom:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));column-gap:20px}
+#llist{max-height:68vh;overflow:auto;border-top:1px solid var(--line);margin-bottom:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));column-gap:20px}
 .lr{display:grid;grid-template-columns:22px 1fr 112px;gap:8px;align-items:center;padding:4px 2px;border-bottom:1px solid var(--line);font-size:16px;font-weight:600}
-.lr .ln{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lr .ln{line-height:1.25}
 .lr input[type=checkbox]{width:18px;height:18px;justify-self:center}
 .lr select{padding:3px 6px;font-size:14px;border-radius:8px}
 .lr.ab .ln{color:#98a2b8;text-decoration:line-through}.lr.ab select{opacity:.4}
@@ -128,7 +128,7 @@ select{width:100%;font:inherit;padding:9px 12px;border-radius:10px;border:2px so
   </div>
 </div>
 <div class="modal" id="lmodal">
-  <div class="box" style="max-width:1100px;padding:20px 24px" role="dialog" aria-label="Danh sách thành viên">
+  <div class="box" style="max-width:min(1400px,96vw);padding:20px 24px" role="dialog" aria-label="Danh sách thành viên">
     <h2><span>📋 Danh sách thành viên</span><button id="lx" aria-label="Đóng">✕</button></h2>
     <div class="lsum"><span id="lsum"></span><span><button class="lnk" id="la1">Chọn tất cả</button> · <button class="lnk" id="la0">Bỏ chọn tất cả</button> · <button class="lnk" id="lp0">Bỏ ghim hết</button></span></div>
     <div id="llist"></div>
@@ -427,6 +427,9 @@ function lsum() { const p = ALL.filter(s => !s.ab); $("#lsum").textContent = `C�
 function openList() {
   let G = parseInt($("#gcount").value, 10); if (!G || G < 1) G = 10; G = Math.min(G, 99);
   const L = $("#llist"); L.innerHTML = "";
+  const cx = document.createElement("canvas").getContext("2d"); cx.font = `600 16px ${getComputedStyle(document.body).fontFamily}`;
+  const lw = Math.ceil(Math.max(120, ...ALL.map(t => cx.measureText(t.name).width))) + 22 + 112 + 24 + 8;
+  L.style.gridTemplateColumns = `repeat(auto-fill,minmax(min(100%,${lw}px),1fr))`;
   ALL.forEach(s => {
     const r = document.createElement("div"); r.className = "lr" + (s.ab ? " ab" : "");
     const mx = Math.max(G, s.pin || 0); let o = '<option value="0">Không ghim</option>'; for (let i = 1; i <= mx; i++) o += `<option value="${i}"${s.pin === i ? " selected" : ""}>Nhóm ${i}</option>`;
