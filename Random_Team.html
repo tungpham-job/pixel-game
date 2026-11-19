@@ -453,7 +453,7 @@ $("#lp0").onclick = () => { ALL.forEach(s => s.pin = 0); openList(); };
 
 /* ===== XUẤT KẾT QUẢ (PNG / .doc) ===== */
 function collect() {
-  return [...document.querySelectorAll(".grp")].map((g, i) => ({ i: i + 1, name: $(".gname", g).value.trim(), note: $(".gnote", g).value.trim(), m: [...g.querySelectorAll(".mem")].map(li => li.dataset.name) }));
+  return [...document.querySelectorAll(".grp")].map((g, i) => ({ i: i + 1, name: $(".gname", g).value.trim(), note: $(".gnote", g).value.trim(), m: [...g.querySelectorAll(".mem")].map(li => ({ n: li.dataset.name, p: li.classList.contains("pinned") })) }));
 }
 function stamp() { const d = new Date(), p = n => String(n).padStart(2, "0"); return { vn: `${p(d.getDate())}/${p(d.getMonth() + 1)}/${d.getFullYear()}`, f: `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}` }; }
 function dl(blob, fn) { const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = fn; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); }
@@ -479,7 +479,7 @@ function exportPNG() {
     x.textAlign = "left"; x.fillStyle = FG[i % 8]; fit(gTitle(g), cw - 90, 28, 800); x.fillText(gTitle(g), q.x + 24, q.y + HH / 2);
     let yy = q.y + HH;
     if (g.note) { x.fillStyle = "#fffbe6"; x.fillRect(q.x, yy, cw, 36); x.fillStyle = "#7a6a1f"; fit(g.note, cw - 40, 20, "italic 600"); x.fillText(g.note, q.x + 24, yy + 18); yy += 36; }
-    g.m.forEach(nm => { x.fillStyle = "#d9e2f2"; x.fillRect(q.x + 8, yy, cw - 8, 1); x.fillStyle = "#1d2a44"; fit(nm, cw - 48, 25, 600); x.fillText(nm, q.x + 24, yy + ROW / 2 + 1); yy += ROW; });
+    g.m.forEach(o => { const nm = o.n + (o.p ? " 📌" : ""); x.fillStyle = "#d9e2f2"; x.fillRect(q.x + 8, yy, cw - 8, 1); x.fillStyle = "#1d2a44"; fit(nm, cw - 48, 25, 600); x.fillText(nm, q.x + 24, yy + ROW / 2 + 1); yy += ROW; });
     x.restore();
   });
   c.toBlob(b => dl(b, `Ket_qua_chia_nhom_${t.f}.png`), "image/png");
@@ -488,7 +488,7 @@ function exportDoc() {
   const G = collect(); if (!G.length) return;
   const t = stamp(), n = G.reduce((a, g) => a + g.m.length, 0), cols = 3; let rows = "";
   for (let i = 0; i < G.length; i += cols) {
-    rows += "<tr>"; for (let k = 0; k < cols; k++) { const g = G[i + k]; rows += g ? `<td><b>${esc(gTitle(g))}</b> <span style="color:#5b6b8c">(${g.m.length} người)</span><br>${g.note ? `<i style="color:#7a6a1f">${esc(g.note)}</i><br>` : ""}${g.m.map((m, j) => `${j + 1}. ${esc(m)}`).join("<br>")}</td>` : "<td></td>"; } rows += "</tr>";
+    rows += "<tr>"; for (let k = 0; k < cols; k++) { const g = G[i + k]; rows += g ? `<td><b>${esc(gTitle(g))}</b> <span style="color:#5b6b8c">(${g.m.length} người)</span><br>${g.note ? `<i style="color:#7a6a1f">${esc(g.note)}</i><br>` : ""}${g.m.map((m, j) => `${j + 1}. ${esc(m.n)}${m.p ? " 📌" : ""}`).join("<br>")}</td>` : "<td></td>"; } rows += "</tr>";
   }
   const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>Kết quả chia nhóm</title><style>@page{size:29.7cm 21cm;mso-page-orientation:landscape;margin:1.5cm}body{font-family:Calibri,Arial,sans-serif;font-size:13pt}h1{text-align:center;font-size:22pt;margin:0}p.s{text-align:center;color:#5b6b8c;margin:2pt 0 12pt}table{border-collapse:collapse;width:100%}td{vertical-align:top;border:1pt solid #9aa9c6;padding:6pt 8pt;width:33%}</style></head><body><h1>Kết quả chia nhóm</h1><p class="s">${t.vn} · ${n} người · ${G.length} nhóm</p><table>${rows}</table></body></html>`;
   dl(new Blob(["\ufeff", html], { type: "application/msword;charset=utf-8" }), `Ket_qua_chia_nhom_${t.f}.doc`);
