@@ -296,6 +296,8 @@ function piece(i, size = 56) {
 function fullKey(size = 300) {
   return `<svg viewBox="0 0 300 100" width="${size}" height="${size / 3}" aria-hidden="true">${keyArt(false)}</svg>`;
 }
+/* Vùng 3: câu hỏi hiện bằng Pixel + chữ đậm (câu tình huống: Pixel + chữ thường) */
+const qBold = html => narrator("happy", `<b>${html}</b>`);
 function narrator(mood, html, cage) {
   return `<div class="narrator">${pixel(mood, 96, cage)}<div class="say">${html}</div></div>`;
 }
@@ -366,7 +368,7 @@ function say(fb, type, text) {
 
 /* Khối chọn DỪNG – CHẶN – KỂ (cfg.inline: chèn thẳng vào khung câu hỏi; cfg.label: chữ trên nút tiếp tục) */
 function actionBlock(parent, cfg) {
-  const html = `<h3 style="margin-top:14px">Cả đội thảo luận: bước đầu tiên là gì?</h3>
+  const html = `${cfg.pix ? `<div style="margin-top:14px">${qBold("Cả đội thảo luận: bước đầu tiên là gì?")}</div>` : '<h3 style="margin-top:14px">Cả đội thảo luận: bước đầu tiên là gì?</h3>'}
     <div class="acts">
       <button class="act d" data-k="d"><b>🛑 DỪNG</b><span>không trả lời, không bấm</span></button>
       <button class="act c" data-k="c"><b>🚫 CHẶN</b><span>chặn và báo cáo</span></button>
@@ -550,7 +552,8 @@ function drawProg(n, zi, hidden) {
 /* Dựng khối chọn 1 đáp án vào box; gọi onCorrect(o, fb) khi chọn đúng */
 function buildPick(box, R, onCorrect) {
   const w = document.createElement("div");
-  w.innerHTML = `<h3>${R.q}</h3>${R.scene || ""}<div class="opts ${R.grid ? "grid" : ""}" style="margin-top:12px"></div><div class="fb"></div>`;
+  const qh = R.pix ? `<div style="margin-top:14px">${qBold(R.q)}</div>` : `<h3>${R.q}</h3>`;
+  w.innerHTML = `${R.pix ? (R.scene || "") + qh : qh + (R.scene || "")}<div class="opts ${R.grid ? "grid" : ""}" style="margin-top:12px"></div><div class="fb"></div>`;
   box.appendChild(w);
   const ob = $(".opts", w), fb = $(".fb", w);
   shuffle(R.o).forEach(o => {
@@ -567,6 +570,7 @@ function pickRounds(ctx, rounds, after) {
   let r = 0;
   const show = () => {
     const R = rounds[r++], lastR = r === rounds.length, box = qScreen(ctx);
+    if (ctx.zi === 2) R.pix = 1;
     setSkip(lastR ? tail(ctx, after).fn : show);
     buildPick(box, R, (o, fb) => {
       const t = lastR ? tail(ctx, after) : { label: "Câu tiếp ▶", fn: show };
@@ -578,7 +582,8 @@ function pickRounds(ctx, rounds, after) {
 
 function multiPick(ctx, cfg, after) {
   const box = qScreen(ctx); setSkip(tail(ctx, after).fn);
-  box.innerHTML = `<h3>${cfg.q}</h3><div class="opts grid"></div><div class="fb"></div>
+  const zq = ctx.zi === 2;
+  box.innerHTML = `${zq ? (cfg.pre || "") + `<div style="margin-top:14px">${qBold(cfg.q)}</div>` : `<h3>${cfg.q}</h3>`}<div class="opts grid"></div><div class="fb"></div>
     <p class="center" style="margin:16px 0 0"><button class="btn" id="chk">Xong rồi! ✔</button></p>`;
   const ob = $(".opts", box), fb = $(".fb", box);
   const O = cfg.o.map(x => Object.assign({}, x));
@@ -683,7 +688,7 @@ function story(ctx, N, start) {
   const go = id => {
     const n = N[id];
     if (n.q && !visited.has(id)) { visited.add(id); box = qScreen(ctx); setSkip(n.skipTo ? () => go(n.skipTo) : ctx.next); }
-    box.innerHTML = `<div class="narrator">${pixel(n.end ? "joy" : (n.back ? "worried" : "happy"), 84)}<div class="say">${n.text}</div></div><div class="opts" style="margin-top:14px"></div>`;
+    box.innerHTML = `<div class="narrator">${pixel(n.end ? "joy" : (n.back ? "worried" : "happy"), ctx.zi === 2 ? 96 : 84)}<div class="say">${ctx.zi === 2 && n.q ? `<b>${n.text}</b>` : n.text}</div></div><div class="opts" style="margin-top:14px"></div>`;
     const o = $(".opts", box);
     if (n.end) { good(); o.innerHTML = `<div class="center"><button class="btn green" id="se">${ctx.endLabel}</button></div>`; $("#se", box).onclick = ctx.next; return; }
     if (n.back) { soft(); o.innerHTML = '<div class="center"><button class="btn" id="sb">↩ Quay lại chọn lại</button></div>'; $("#sb", box).onclick = () => go(n.back); return; }
@@ -953,9 +958,9 @@ async function g3A(ctx) {
     { av: "😆", who: "Tú", html: "Haha share đi share đi!!" },
     { av: "🤭", who: "Hà", html: "😂😂😂 đỉnh quá" }
   ]);
-  chat.insertAdjacentHTML("beforeend", '<p class="center" style="font-weight:700;color:var(--soft);margin:10px 0 0">Bạn Na vừa nhìn thấy tấm ảnh… Na rất buồn 😢</p>');
+  box.insertAdjacentHTML("beforeend", `<div style="margin-top:14px">${narrator("worried", "Bạn Na vừa nhìn thấy tấm ảnh… Na rất buồn 😢")}</div>`);
   actionBlock(box, {
-    inline: 1, label: "Câu tiếp ▶", correct: "k",
+    inline: 1, pix: 1, label: "Câu tiếp ▶", correct: "k",
     fb: {
       k: "Đúng rồi! Khi thấy bạn bị chế giễu, mình <b>KỂ</b> với người lớn tin cậy như cô giáo, bố mẹ để giúp bạn.",
       d: "Không cười theo cũng là tốt, nhưng bạn Na đang cần được giúp đỡ. Bước nào giúp được bạn nhiều nhất nhỉ? Thử lại nhé!",
@@ -982,7 +987,7 @@ function g3C(ctx) {
     <div class="bub" style="max-width:none;font-size:22px">😱 <b>SỐC!!!</b> Uống nước chanh muối mỗi sáng <b>KHỎI MỌI BỆNH</b>!!! Chia sẻ ngay cho 10 người, nếu không sẽ gặp xui!!!
     <div style="color:var(--soft);font-size:16px;margin-top:6px">❤️ 12.000 lượt thích · 8.000 lượt chia sẻ</div></div></div>`;
   multiPick(ctx, {
-    q: post + "Chọn <u>3 dấu hiệu</u> cho thấy tin này không đáng tin", need: 3,
+    pre: post, q: "Chọn <u>3 dấu hiệu</u> cho thấy tin này không đáng tin", need: 3,
     g: "Đúng! Không rõ ai đăng, giật gân và ép chia sẻ là dấu hiệu tin giả.",
     o: [
       { t: "Không rõ ai đăng, không có nguồn", ok: 1 },
@@ -1001,7 +1006,7 @@ function g3C(ctx) {
   }]));
 }
 function g3D(ctx) {
-  const post = t => `<div class="chat"><div class="bub" style="max-width:none;font-size:20px">${t}</div></div>`;
+  const post = t => narrator("happy", t);
   ctx.title = "Đổi lời độc hại thành tử tế"; ctx.intro = narrator("happy", "Có những bình luận làm bạn khác buồn. Đội mình chọn cách đáp lại <b>tử tế</b> nhé!");
   pickRounds(ctx, [
     {
@@ -1052,8 +1057,8 @@ const ZONES = [
   {
     name: "Vùng 3 · Quảng trường Bình Luận", games: [g3A, g3B, g3C, g3D], n: [2, 2, 2, 4], emoji: "💬", welcome: "Quảng trường đông vui, ai cũng đang bình luận. Đội mình giúp Pixel ứng xử thật tử tế nhé!",
     lesson: "Em không phải im lặng nhìn bạn bị bắt nạt. Em có thể giúp bạn bằng cách <b>KỂ</b> với người lớn, và nói lời tử tế.",
-    hidden: { list: [{ title: "Có người dọa đăng ảnh", text: "Có người dọa sẽ đăng ảnh của Pixel nếu không gửi ảnh riêng tư. Đội mình xử lý sao?", m: {
-      q: "Một người trên mạng nói: “Nếu em không gửi ảnh riêng tư, anh sẽ đăng ảnh em lên mạng.” Chọn <u>3 việc nên làm</u>", need: 3,
+    hidden: { list: [{ title: "Có người dọa đăng ảnh", text: "Một người trên mạng nói với Pixel: “Nếu em không gửi ảnh riêng tư, anh sẽ đăng ảnh em lên mạng.”", m: {
+      q: "Đội mình xử lý sao? Chọn <u>3 việc nên làm</u>", need: 3,
       g: "Giỏi quá! Không gửi, giữ bằng chứng và kể với người lớn. Em không có lỗi, và người lớn luôn sẵn sàng giúp.",
       o: [
         { t: "Không gửi ảnh", ok: 1 }, { t: "Chụp màn hình giữ bằng chứng", ok: 1 }, { t: "Kể ngay với bố mẹ hoặc cô giáo", ok: 1 },
@@ -1061,8 +1066,8 @@ const ZONES = [
         { t: "Xóa hết tin nhắn và giấu", h: "Giữ bằng chứng giúp người lớn xử lý. Đừng giấu nhé." },
         { t: "Dọa lại để họ sợ", h: "Đáp trả có thể làm chuyện nguy hiểm hơn. Hãy nhờ người lớn." }
       ] } },
-    { title: "Rủ gặp ngoài đời", text: "Một người quen trên mạng rủ Pixel gặp ngoài đời và dặn đừng nói với bố mẹ. Đội mình xử lý sao?", m: {
-      q: "Người đó nhắn: “Anh muốn gặp em, nhưng đừng nói với bố mẹ nhé.” Chọn <u>3 việc nên làm</u>", need: 3,
+    { title: "Rủ gặp ngoài đời", text: "Một người quen trên mạng nhắn với Pixel: “Anh muốn gặp em, nhưng đừng nói với bố mẹ nhé.”", m: {
+      q: "Đội mình xử lý sao? Chọn <u>3 việc nên làm</u>", need: 3,
       g: "Giỏi quá! Không đi gặp, không giữ bí mật và kể với người lớn. Người tốt sẽ không bắt em giấu bố mẹ.",
       o: [
         { t: "Không đi gặp", ok: 1 },
@@ -1072,8 +1077,8 @@ const ZONES = [
         { t: "Hứa giữ bí mật vì họ đã nhờ", h: "Người tốt sẽ không bắt em giấu bố mẹ. Bí mật kiểu này rất nguy hiểm." },
         { t: "Gửi địa chỉ để họ đến đón", h: "Không bao giờ cho người lạ địa chỉ nhà hay trường học." }
       ] } },
-    { title: "Mạo danh bạn thân xin mã OTP", text: "Một tài khoản giống hệt bạn thân nhắn nhờ Pixel gửi mã xác nhận vừa về điện thoại. Đội mình xử lý sao?", m: {
-      q: "Tài khoản giống bạn thân nhắn: “Cho mình mã xác nhận vừa gửi về điện thoại bạn gấp nhé!” Chọn <u>3 việc nên làm</u>", need: 3,
+    { title: "Mạo danh bạn thân xin mã OTP", text: "Một tài khoản giống hệt bạn thân nhắn với Pixel: “Cho mình mã xác nhận vừa gửi về điện thoại bạn gấp nhé!”", m: {
+      q: "Đội mình xử lý sao? Chọn <u>3 việc nên làm</u>", need: 3,
       g: "Giỏi quá! Mã xác nhận như chìa khóa tài khoản của em, không đưa cho ai, và luôn hỏi lại bạn trực tiếp cho chắc.",
       o: [
         { t: "Không gửi mã cho ai", ok: 1 },
@@ -1083,8 +1088,8 @@ const ZONES = [
         { t: "Gửi mã rồi dặn bạn đừng làm bậy", h: "Gửi mã là bị chiếm tài khoản rồi. Tuyệt đối không gửi nhé." },
         { t: "Chỉ nhắn lại qua chính tài khoản đó để hỏi", h: "Tài khoản đó chưa chắc là bạn thật. Hãy gọi hoặc gặp bạn trực tiếp." }
       ] } },
-    { title: "Công an gọi điện lạ", text: "Có người xưng là công an gọi cho Pixel, nói liên quan đến vụ án và đòi giữ bí mật. Đội mình xử lý sao?", m: {
-      q: "Một người xưng là công an gọi điện: “Em liên quan đến một vụ án, không được nói với ai và phải cung cấp thông tin cá nhân.” Chọn <u>3 việc nên làm</u>", need: 3,
+    { title: "Công an gọi điện lạ", text: "Một người xưng là công an gọi điện cho Pixel: “Em liên quan đến một vụ án, không được nói với ai và phải cung cấp thông tin cá nhân.”", m: {
+      q: "Đội mình xử lý sao? Chọn <u>3 việc nên làm</u>", need: 3,
       g: "Giỏi quá! Tắt máy, không bấm link, không cài ứng dụng lạ và báo ngay với người lớn. Đó là chiêu lừa đảo.",
       o: [
         { t: "Tắt máy và ngắt liên lạc", ok: 1 },
@@ -1094,8 +1099,8 @@ const ZONES = [
         { t: "Giữ bí mật theo yêu cầu, không nói với ai", h: "Kẻ lừa đảo luôn bắt giữ bí mật. Hãy kể ngay với người lớn." },
         { t: "Làm theo hướng dẫn của họ cho nhanh xong chuyện", h: "Họ cố hối thúc để em không kịp suy nghĩ. Hãy tắt máy nhé." }
       ] } },
-    { title: "Shipper giao đơn hàng lạ", text: "Có shipper gọi điện báo giao một đơn hàng lạ, miễn phí cho Pixel. Đội mình xử lý sao?", m: {
-      q: "Shipper gọi: “Có đơn hàng miễn phí gửi cho em, ra nhận ngay nhé!” Nhưng em không hề đặt hàng. Chọn <u>3 việc nên làm</u>", need: 3,
+    { title: "Shipper giao đơn hàng lạ", text: "Shipper gọi cho Pixel: “Có đơn hàng miễn phí gửi cho em, ra nhận ngay nhé!” Nhưng Pixel không hề đặt hàng.", m: {
+      q: "Đội mình xử lý sao? Chọn <u>3 việc nên làm</u>", need: 3,
       g: "Giỏi quá! Không nhận hàng không rõ nguồn gốc và báo ngay với người lớn. Hàng lạ miễn phí thường là chiêu lừa.",
       o: [
         { t: "Tuyệt đối không nhận gói hàng không rõ nguồn gốc", ok: 1 },
