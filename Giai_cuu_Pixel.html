@@ -954,7 +954,7 @@ async function g3A(ctx) {
     <circle cx="46" cy="58" r="9" fill="#fff" stroke="#1d2a44" stroke-width="3"/><circle cx="74" cy="58" r="9" fill="#fff" stroke="#1d2a44" stroke-width="3"/>
     <path d="M40 58 h-8 M80 58 h8 M55 58 h10" stroke="#1d2a44" stroke-width="3"/><circle cx="46" cy="59" r="3" fill="#1d2a44"/><circle cx="74" cy="59" r="3" fill="#1d2a44"/>
     <ellipse cx="60" cy="76" rx="8" ry="6" fill="#ff8a80" stroke="#1d2a44" stroke-width="3"/></svg>`;
-  ctx.title = "Giúp bạn bị chế giễu"; ctx.intro = narrator("worried", "Ở Quảng trường Bình Luận, nhóm chat của lớp đang rất ồn ào…");
+  ctx.title = "Giúp bạn đang bị chế giễu"; ctx.intro = narrator("worried", "Ở Quảng trường Bình Luận, nhóm chat của lớp đang rất ồn ào…");
   const box = qScreen(ctx);
   const toPick = () => multiPick(ctx, {
     q: "Chọn <u>3 việc nên làm</u> để giúp bạn Na", need: 3,
@@ -988,7 +988,7 @@ async function g3A(ctx) {
   });
 }
 function g3B(ctx) {
-  ctx.title = "Em là người chứng kiến"; ctx.intro = narrator("happy", "Đây là câu chuyện mà <b>đội mình quyết định</b>. Mỗi lựa chọn dẫn tới một kết quả khác nhau. Chọn sai thì quay lại chọn lại nhé!");
+  ctx.title = "Khi nào em nên giữ bí mật?"; ctx.intro = narrator("happy", "Đây là câu chuyện mà <b>đội mình quyết định</b>. Mỗi lựa chọn dẫn tới một kết quả khác nhau. Chọn sai thì quay lại chọn lại nhé!");
   story(ctx, {
     a: { q: 1, skipTo: "b", text: "Bạn Bống nhờ em giữ bí mật một tin nhắn riêng. Hôm sau, bạn Tuấn biết chuyện, đòi xem và nói sẽ gửi vào nhóm chat cả lớp. Em sẽ làm gì?", opts: [{ t: "Cho Tuấn xem một chút thôi", to: "a1" }, { t: "Mặc kệ, đó là chuyện của hai bạn", to: "a2" }, { t: "Không cho xem và nhắn Tuấn đừng gửi", to: "b" }] },
     a1: { back: "a", text: "Tuấn chụp lại rồi gửi cả nhóm. Bống xấu hổ và buồn lắm… Mình thử chọn lại nhé!" },
