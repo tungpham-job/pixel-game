@@ -14,12 +14,14 @@ header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px
 header h1{margin:0;font-size:22px;white-space:nowrap}
 .hinfo{font-size:14px;color:var(--soft);padding-left:14px;border-left:2px solid var(--line);min-width:0}
 .sp{flex:1}
-.ctlb{display:flex;align-items:center;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+header .gear{margin-left:auto}
+@media (max-width:900px){.ctlb{position:static;transform:none}}
+.ctlb{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
 .clb{padding:0 12px;font-weight:700;font-size:16px;white-space:nowrap}
 input#gcount{width:64px;text-align:center;font-size:20px;padding:6px 4px;border:0;border-left:2px solid var(--line);border-radius:0;max-width:none}
 .ctlb .btn{margin:0;border-radius:0;box-shadow:none;font-size:17px;padding:9px 20px}
 .ctlb .btn:active{transform:none;box-shadow:none;background:#1f5fb8}
-.err{position:absolute;right:70px;top:100%;margin:6px 0 0;background:#fff;border:2px solid var(--red);border-radius:10px;padding:6px 14px;color:var(--red);font-weight:700;font-size:15px;display:none;box-shadow:0 6px 18px rgba(0,0,0,.15)}
+.err{position:absolute;left:50%;transform:translateX(-50%);top:100%;margin:6px 0 0;background:#fff;border:2px solid var(--red);border-radius:10px;padding:6px 14px;color:var(--red);font-weight:700;font-size:15px;display:none;box-shadow:0 6px 18px rgba(0,0,0,.15)}
 .gear{width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:#fff;font-size:22px;line-height:1;padding:0}
 .gear:hover{background:#f1f6ff}.gear:disabled{opacity:.4;cursor:default}
 main{max-width:1500px;margin:0 auto;padding:14px 18px 80px}
@@ -30,11 +32,11 @@ input[type=text]:focus{outline:none;border-color:var(--blue)}
 .lnk{background:none;border:0;color:var(--blue);text-decoration:underline;font-size:15px;padding:0}
 #groups{--mfs:19px;display:grid;grid-template-columns:repeat(auto-fill,minmax(max(230px,calc(var(--mfs)*12)),1fr));gap:16px;align-items:start}
 .grp{background:#fff;border-radius:16px;box-shadow:0 4px 16px rgba(60,80,140,.14);overflow:hidden;border:2px solid var(--line)}
-.gh{position:relative;background:var(--bg);padding:24px 0 8px 10px}
+.gh{position:relative;background:var(--bg);padding:22px 0 8px 10px}
 .gtop{display:flex;align-items:center;gap:8px}
 .gn{flex:none;width:34px;height:34px;border-radius:50%;background:var(--fg);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
 input.gname{flex:1;min-width:0;width:100%;max-width:none;font-size:calc(var(--mfs,19px)*.9);padding:5px 8px;border-width:2px;border-right:0;border-radius:9px 0 0 9px}
-.gc{position:absolute;top:0;right:0;background:var(--fg);color:#fff;font-size:13px;font-weight:700;line-height:1;padding:4px 10px 5px;border-radius:0 0 0 10px;min-width:30px;text-align:center}
+.gc{position:absolute;top:3px;right:9px;color:#000;font-size:14px;font-weight:600;line-height:1}
 input.gnote{display:block;max-width:none;width:100%;border:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0;background:#fffbe6;font-size:calc(var(--mfs,19px)*.8);padding:6px 12px;font-weight:600}
 input.gnote:focus{border-color:#f5c542;background:#fff8cc}
 .glist{list-style:none;margin:0;padding:0;min-height:44px}
@@ -77,7 +79,6 @@ select{width:100%;font:inherit;padding:9px 12px;border-radius:10px;border:2px so
   <h1>Random Team</h1>
   <div class="hinfo"><span id="info">Đang đọc randomlist.csv…</span>
     <span id="picker" style="display:none"><button class="lnk" id="pick">Chọn file randomlist.csv</button><input type="file" id="file" accept=".csv,text/csv,text/plain" style="display:none"></span></div>
-  <span class="sp"></span>
   <div class="ctlb"><span class="clb">Số nhóm</span><input type="text" id="gcount" inputmode="numeric" value="6" maxlength="3" aria-label="Số lượng nhóm"><button class="btn" id="go">Chia nhóm</button></div>
   <button class="gear" id="gear" aria-label="Thiết lập" title="Thiết lập">⚙️</button>
   <p class="err" id="err"></p>
@@ -90,15 +91,14 @@ select{width:100%;font:inherit;padding:9px 12px;border-radius:10px;border:2px so
 <div class="modal" id="modal">
   <div class="box" role="dialog" aria-label="Thiết lập">
     <h2><span>⚙️ Thiết lập</span><button id="x" aria-label="Đóng">✕</button></h2>
-    <div class="fld"><label for="sex">Cách chia theo giới tính</label>
-      <select id="sex"><option value="sep">Nam nữ riêng</option><option value="mix">Nam nữ chung</option></select>
-      <p class="note">Nam nữ riêng: chia đều nam và nữ vào từng nhóm.<br>Nam nữ chung: không phân biệt giới tính.</p></div>
-    <div class="fld"><label for="secs">Thời gian hiệu ứng</label>
-      <input type="text" id="secs" inputmode="numeric" style="width:90px;text-align:center" maxlength="3"> <span style="color:var(--soft)">giây</span></div>
     <div class="fld"><label for="fx">Kiểu hiệu ứng</label>
       <select id="fx"><option value="0">1. Chia bài</option><option value="1">2. Máy quay số</option><option value="2">3. Lồng quay xổ số</option><option value="3">4. Nam châm</option><option value="4">5. Giải mã ma trận</option></select></div>
+    <div class="fld"><label for="sex">Cách chia theo giới tính</label>
+      <select id="sex"><option value="sep">Nam nữ riêng</option><option value="mix">Nam nữ chung</option></select></div>
+    <div class="fld"><label for="secs">Thời gian hiệu ứng</label>
+      <input type="text" id="secs" inputmode="numeric" style="width:90px;text-align:center" maxlength="3"> <span style="color:var(--soft)">giây</span></div>
     <div class="fld"><label for="fs">Cỡ chữ trong bảng nhóm</label>
-      <select id="fs"><option value="0">Nhỏ</option><option value="1">Vừa</option><option value="2">Lớn</option><option value="3">Rất lớn</option></select></div>
+      <select id="fs"><option value="0">Rất nhỏ</option><option value="1">Nhỏ</option><option value="2">Vừa</option><option value="3">Lớn</option></select></div>
     <label class="chk"><input type="checkbox" id="flt">Lọc thành viên</label>
     <div class="acts"><button id="cancel">Đóng</button><button class="ok" id="save">Lưu</button></div>
   </div>
@@ -109,11 +109,11 @@ select{width:100%;font:inherit;padding:9px 12px;border-radius:10px;border:2px so
 
 <script>
 const $ = (s, r = document) => r.querySelector(s);
-const S = { sex: "sep", secs: 15, filter: false, fx: 1, fs: 1 };
-const FS = [16, 19, 24, 30];
+const S = { sex: "sep", secs: 15, filter: false, fx: 1, fs: 2 };
+const FS = [13, 16, 19, 24];
 const applyFs = () => $("#groups").style.setProperty("--mfs", FS[S.fs] + "px");
-try { Object.assign(S, JSON.parse(localStorage.getItem("rt_settings") || "null") || {}); } catch (e) {}
-const saveSet = () => { try { localStorage.setItem("rt_settings", JSON.stringify(S)); } catch (e) {} };
+try { Object.assign(S, JSON.parse(localStorage.getItem("rt_settings2") || "null") || {}); } catch (e) {}
+const saveSet = () => { try { localStorage.setItem("rt_settings2", JSON.stringify(S)); } catch (e) {} };
 
 applyFs();
 /* ===== ĐỌC CSV ===== */
@@ -147,7 +147,7 @@ let STU = [];
 function setStudents(rows) {
   STU = toStudents(rows);
   const m = STU.filter(s => s.g === "M").length, f = STU.filter(s => s.g === "F").length;
-  $("#info").innerHTML = STU.length ? `<b>${STU.length}</b> học sinh (${m} nam, ${f} nữ) · <button class="lnk" id="pick2">Đổi file</button>` : "File không có học sinh nào. Kiểm tra cột 1 (tên). ";
+  $("#info").innerHTML = STU.length ? `<b>${STU.length}</b> người (${m} nam, ${f} nữ) · <button class="lnk" id="pick2">Đổi file</button>` : "File không có tên nào. Kiểm tra cột 1 (tên). ";
   $("#picker").style.display = STU.length ? "none" : "inline";
   const p2 = $("#pick2"); if (p2) p2.onclick = () => $("#file").click();
 }
@@ -314,10 +314,10 @@ function setBusy(b) { $("#go").disabled = b; $("#gear").disabled = b; $("#gcount
 $("#go").onclick = () => {
   const err = $("#err"); err.style.display = "none";
   const fail = m => { err.textContent = m; err.style.display = "block"; clearTimeout(fail.t); fail.t = setTimeout(() => { err.style.display = "none"; }, 5000); };
-  if (!STU.length) { fail("Chưa có danh sách học sinh. Hãy chọn file randomlist.csv."); return; }
+  if (!STU.length) { fail("Chưa có danh sách. Hãy chọn file randomlist.csv."); return; }
   const G = parseInt($("#gcount").value, 10);
   if (!G || G < 1) { fail("Nhập số lượng nhóm (từ 1 trở lên)."); return; }
-  if (G > STU.length) { fail(`Số nhóm lớn hơn số học sinh (${STU.length}). Hãy nhập số nhỏ hơn.`); return; }
+  if (G > STU.length) { fail(`Số nhóm lớn hơn số người (${STU.length}). Hãy nhập số nhỏ hơn.`); return; }
   try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); AC.resume && AC.resume(); } catch (e) {}
   renderGroups(divide(STU, G)); $("#hint").style.display = "block"; setBusy(true);
   const first = $("#groups").firstElementChild; if (first) first.scrollIntoView({ block: "nearest" });
