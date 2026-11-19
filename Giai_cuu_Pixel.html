@@ -200,7 +200,7 @@ main:has(.rescue),main:has(.asmcard){max-width:1280px}
 .asm .kq .qr{color:var(--red)}
 .asm .kq.screen{animation:none}
 .asm-btn{margin-top:60px;min-height:64px}
-.asm .assemble{transition:gap 2.6s ease-in-out}
+.asm .assemble{transition:gap 2.2s ease-out}
 .w{opacity:0;transform:translateY(8px);display:inline-block;transition:opacity .35s,transform .35s}
 .w.on{opacity:1;transform:none}
 .late{opacity:0;visibility:hidden;transition:opacity .5s}.late.on{opacity:1;visibility:visible}
@@ -1227,7 +1227,8 @@ async function assemble() {
     <p class="asm-btn" id="after"></p></div>`);
   setSkip(gate);
   await wait(900);
-  $("#as", s).classList.add("joined"); await wait(2650);
+  const as = $("#as", s);
+  await new Promise(r => { const done = () => { as.removeEventListener("transitionend", done); r(); }; as.addEventListener("transitionend", done); setTimeout(r, 3200); as.classList.add("joined"); });
   good(); setTimeout(() => tone([880, 1100, 1320]), 300);
   const kq = $("#kq", s);
   kq.innerHTML = `“3 mảnh ghép lại là 3 kỹ năng tự bảo vệ của các em.<br><span class="qr">Chiếc chìa khóa này không mở cửa bằng sức mạnh, mà bằng sự hiểu biết.”</span>`;
