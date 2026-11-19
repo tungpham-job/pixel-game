@@ -296,7 +296,7 @@ function piece(i, size = 56) {
 function fullKey(size = 300) {
   return `<svg viewBox="0 0 300 100" width="${size}" height="${size / 3}" aria-hidden="true">${keyArt(false)}</svg>`;
 }
-/* Vùng 3: câu hỏi hiện bằng Pixel + chữ đậm (câu tình huống: Pixel + chữ thường) */
+/* Mọi vùng: câu hỏi hiện bằng Pixel + chữ đậm (câu tình huống: Pixel + chữ thường) */
 const qBold = html => narrator("happy", `<b>${html}</b>`);
 function narrator(mood, html, cage) {
   return `<div class="narrator">${pixel(mood, 96, cage)}<div class="say">${html}</div></div>`;
@@ -368,7 +368,7 @@ function say(fb, type, text) {
 
 /* Khối chọn DỪNG – CHẶN – KỂ (cfg.inline: chèn thẳng vào khung câu hỏi; cfg.label: chữ trên nút tiếp tục) */
 function actionBlock(parent, cfg) {
-  const html = `${cfg.pix ? `<div style="margin-top:14px">${qBold("Cả đội thảo luận: bước đầu tiên là gì?")}</div>` : '<h3 style="margin-top:14px">Cả đội thảo luận: bước đầu tiên là gì?</h3>'}
+  const html = `<div style="margin-top:14px">${qBold("Cả đội thảo luận: bước đầu tiên là gì?")}</div>
     <div class="acts">
       <button class="act d" data-k="d"><b>🛑 DỪNG</b><span>không trả lời, không bấm</span></button>
       <button class="act c" data-k="c"><b>🚫 CHẶN</b><span>chặn và báo cáo</span></button>
@@ -552,8 +552,7 @@ function drawProg(n, zi, hidden) {
 /* Dựng khối chọn 1 đáp án vào box; gọi onCorrect(o, fb) khi chọn đúng */
 function buildPick(box, R, onCorrect) {
   const w = document.createElement("div");
-  const qh = R.pix ? `<div style="margin-top:14px">${qBold(R.q)}</div>` : `<h3>${R.q}</h3>`;
-  w.innerHTML = `${R.pix ? (R.scene || "") + qh : qh + (R.scene || "")}<div class="opts ${R.grid ? "grid" : ""}" style="margin-top:12px"></div><div class="fb"></div>`;
+  w.innerHTML = `${R.scene || ""}<div style="margin-top:14px">${qBold(R.q)}</div><div class="opts ${R.grid ? "grid" : ""}" style="margin-top:12px"></div><div class="fb"></div>`;
   box.appendChild(w);
   const ob = $(".opts", w), fb = $(".fb", w);
   shuffle(R.o).forEach(o => {
@@ -570,7 +569,6 @@ function pickRounds(ctx, rounds, after) {
   let r = 0;
   const show = () => {
     const R = rounds[r++], lastR = r === rounds.length, box = qScreen(ctx);
-    if (ctx.zi === 2) R.pix = 1;
     setSkip(lastR ? tail(ctx, after).fn : show);
     buildPick(box, R, (o, fb) => {
       const t = lastR ? tail(ctx, after) : { label: "Câu tiếp ▶", fn: show };
@@ -582,8 +580,7 @@ function pickRounds(ctx, rounds, after) {
 
 function multiPick(ctx, cfg, after) {
   const box = qScreen(ctx); setSkip(tail(ctx, after).fn);
-  const zq = ctx.zi === 2;
-  box.innerHTML = `${zq ? (cfg.pre || "") + `<div style="margin-top:14px">${qBold(cfg.q)}</div>` : `<h3>${cfg.q}</h3>`}<div class="opts grid"></div><div class="fb"></div>
+  box.innerHTML = `${cfg.pre || ""}<div style="margin-top:14px">${qBold(cfg.q)}</div><div class="opts grid"></div><div class="fb"></div>
     <p class="center" style="margin:16px 0 0"><button class="btn" id="chk">Xong rồi! ✔</button></p>`;
   const ob = $(".opts", box), fb = $(".fb", box);
   const O = cfg.o.map(x => Object.assign({}, x));
@@ -660,7 +657,7 @@ function spotSigns(ctx, scenes, after) {
     setSkip(isLast ? tail(ctx, after).fn : show);
     const need = S.lines.filter(l => l.info).length;
     const lines = S.lines.map((l, j) => `<span class="ln"><span class="hot" ${l.info ? `data-i="${j}"` : 'data-d="1"'}>${l.t}</span></span>`).join("");
-    box.innerHTML = `<h3>Chạm vào ${need} dấu hiệu lừa đảo trên tin nhắn này!</h3>
+    box.innerHTML = `<div style="margin-top:14px">${qBold(`Chạm vào ${need} dấu hiệu lừa đảo trên tin nhắn này!`)}</div>
       <div class="phone" style="margin-top:12px"><div class="screenph"><div class="sb"><span class="hot" data-d="1">10:05</span><span class="hot" data-d="1">🔋 80%</span></div>
       <div class="sender">${S.sender}</div><div class="sms">${lines}</div></div></div>
       <div class="count">Đã tìm: <span class="c">0</span> / ${need}</div><div class="signs"></div><div class="fb"></div>`;
@@ -688,7 +685,7 @@ function story(ctx, N, start) {
   const go = id => {
     const n = N[id];
     if (n.q && !visited.has(id)) { visited.add(id); box = qScreen(ctx); setSkip(n.skipTo ? () => go(n.skipTo) : ctx.next); }
-    box.innerHTML = `<div class="narrator">${pixel(n.end ? "joy" : (n.back ? "worried" : "happy"), ctx.zi === 2 ? 96 : 84)}<div class="say">${ctx.zi === 2 && n.q ? `<b>${n.text}</b>` : n.text}</div></div><div class="opts" style="margin-top:14px"></div>`;
+    box.innerHTML = `<div class="narrator">${pixel(n.end ? "joy" : (n.back ? "worried" : "happy"), 96)}<div class="say">${n.q ? `<b>${n.text}</b>` : n.text}</div></div><div class="opts" style="margin-top:14px"></div>`;
     const o = $(".opts", box);
     if (n.end) { good(); o.innerHTML = `<div class="center"><button class="btn green" id="se">${ctx.endLabel}</button></div>`; $("#se", box).onclick = ctx.next; return; }
     if (n.back) { soft(); o.innerHTML = '<div class="center"><button class="btn" id="sb">↩ Quay lại chọn lại</button></div>'; $("#sb", box).onclick = () => go(n.back); return; }
@@ -960,7 +957,7 @@ async function g3A(ctx) {
   ]);
   box.insertAdjacentHTML("beforeend", `<div style="margin-top:14px">${narrator("worried", "Bạn Na vừa nhìn thấy tấm ảnh… Na rất buồn 😢")}</div>`);
   actionBlock(box, {
-    inline: 1, pix: 1, label: "Câu tiếp ▶", correct: "k",
+    inline: 1, label: "Câu tiếp ▶", correct: "k",
     fb: {
       k: "Đúng rồi! Khi thấy bạn bị chế giễu, mình <b>KỂ</b> với người lớn tin cậy như cô giáo, bố mẹ để giúp bạn.",
       d: "Không cười theo cũng là tốt, nhưng bạn Na đang cần được giúp đỡ. Bước nào giúp được bạn nhiều nhất nhỉ? Thử lại nhé!",
