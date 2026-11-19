@@ -56,6 +56,13 @@ input[type=text]:focus{outline:none;border-color:var(--blue)}
 .act span{font-size:15px;font-weight:600}
 .act:hover:not([disabled]){transform:translateY(-3px)}
 .act.d{background:var(--red)}.act.c{background:var(--amber)}.act.k{background:var(--green)}
+.topts{display:flex;flex-direction:column;gap:12px}
+.topt{display:flex;align-items:center;gap:14px;text-align:left;border:3px solid var(--line);background:#fff;border-radius:18px;padding:16px 18px;font-size:22px;font-weight:700;color:var(--ink);box-shadow:0 5px 0 rgba(0,0,0,.1);transition:transform .1s}
+.topt:hover:not([disabled]){transform:translateY(-2px);border-color:var(--blue)}
+.topt .tk{flex:none;width:38px;height:38px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800}
+.topt.wrong{border-color:var(--red);background:#fff1f0}
+.topt.right{border-color:var(--green);background:#eafaf0;box-shadow:0 0 0 5px #ffd54f}
+.topt[disabled]:not(.right){opacity:.4;cursor:default;box-shadow:none}
 .act[disabled]{opacity:.35;cursor:default;box-shadow:none}
 .act.right{opacity:1!important;outline:6px solid #ffd54f}
 .fb{margin-top:14px;border-radius:18px;padding:14px 18px;font-weight:600;display:none}
@@ -442,15 +449,37 @@ function tutorial() {
     <div class="chat" style="margin-top:18px"><div class="title">💬 Tin nhắn mới</div>
       <div class="msg"><div class="av">👤</div><div class="bub"><span class="who">Số lạ</span>🎁 Bạn trúng quà! <b>Bấm vào link này</b> để nhận ngay nhé!</div></div></div></div>`);
   setSkip(() => runZone(0));
-  actionBlock(s, {
-    correct: "d",
-    fb: {
-      d: "Chính xác! Tin nhắn lạ bảo bấm link thì mình <b>DỪNG</b>: không bấm, không trả lời. Giờ đội mình đã biết cách chơi rồi!",
-      c: "Chặn cũng là một cách hay! Nhưng việc đầu tiên khi nhận tin lạ bắt bấm link là gì nhỉ? Thử lại nào!",
-      k: "Kể với người lớn rất tốt, mình sẽ làm sau! Nhưng ngay lúc này, tay mình nên làm gì với cái link? Thử lại nhé!"
-    },
+  textChoice(s, {
+    q: "Cả đội thảo luận: bạn nên làm gì?",
+    opts: [
+      "Bấm vào link xem thử có thật không",
+      "Không bấm link, không trả lời, rồi báo người lớn",
+      "Chuyển tiếp cho bạn bè cùng nhận quà"
+    ],
+    correct: 1,
+    fb: [
+      "Đừng bấm nhé! Link lạ có thể lấy cắp thông tin hoặc cài phần mềm xấu. Thử lại nào!",
+      "Chính xác! Tin nhắn lạ bảo bấm link thì mình <b>DỪNG</b>: không bấm, không trả lời, rồi nói với người lớn. Giờ đội mình đã biết cách chơi rồi!",
+      "Chuyển tiếp là đưa nguy hiểm cho cả bạn bè đó! Việc đầu tiên với cái link là gì nhỉ? Thử lại nhé!"
+    ],
     label: "Sẵn sàng vào Mê cung ▶",
     next: () => runZone(0)
+  });
+}
+
+/* Khối chọn đáp án bằng chữ (câu mẫu): chọn sai thì gợi ý và được chọn lại */
+function textChoice(parent, cfg) {
+  const b = append(parent, `<h3 style="margin-top:14px">${cfg.q}</h3>
+    <div class="topts">${cfg.opts.map((t, i) => `<button class="topt" data-i="${i}"><span class="tk">${i + 1}</span><span>${t}</span></button>`).join("")}</div><div class="fb"></div>`);
+  const fb = $(".fb", b);
+  b.querySelectorAll(".topt").forEach(btn => btn.onclick = () => {
+    const i = +btn.dataset.i;
+    if (i === cfg.correct) {
+      good();
+      b.querySelectorAll(".topt").forEach(x => { x.disabled = true; if (x === btn) x.classList.add("right"); });
+      say(fb, "good", cfg.fb[i] + '<div class="center" style="margin-top:12px"><button class="btn green" id="go">' + cfg.label + '</button></div>');
+      $("#go", fb).onclick = () => { $("#go", fb).remove(); cfg.next(); };
+    } else { soft(); btn.classList.add("wrong"); setTimeout(() => btn.classList.remove("wrong"), 700); say(fb, "hint", cfg.fb[i]); }
   });
 }
 
