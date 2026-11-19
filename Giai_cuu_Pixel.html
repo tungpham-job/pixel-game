@@ -1242,11 +1242,11 @@ function gate() {
   const s = screen(`<div class="card center"><h1 class="gtt">Cổng cuối</h1>
     <div style="display:flex;justify-content:center;margin:8px 0">${door(false)}</div>
     <div class="quote">Cổng chỉ mở khi cả đội có <b>người tin cậy</b>…</div>
-    <div class="ask">🌳 Chúng mình hãy cùng làm <b>Cây tin cậy</b>. Khi xong sẽ nhận được mật khẩu để mở cửa nhé!</div>
+    <div class="ask late">🌳 Chúng mình hãy cùng làm <b>Cây tin cậy</b>. Khi xong sẽ nhận được mật khẩu để mở cửa nhé!</div>
     <p class="late" id="opw" style="margin-top:52px"><button class="btn" id="op">🔐 Mở cổng</button></p></div>`);
   $("#op", s).onclick = () => openPin(rescue, "Nhập mã để mở cổng");
   setSkip(rescue);
-  (async () => { await wait(600); await revealWords($(".quote", s)); await wait(250); await revealWords($(".ask", s)); await wait(300); $("#opw", s).classList.add("on"); })();
+  (async () => { await wait(600); await revealWords($(".quote", s)); await wait(300); $(".ask", s).classList.add("on"); await wait(600); await revealWords($(".ask", s)); await wait(300); $("#opw", s).classList.add("on"); })();
 }
 
 /* ===== PIN ===== */
