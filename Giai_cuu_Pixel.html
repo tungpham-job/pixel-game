@@ -197,7 +197,11 @@ main:has(.rescue),main:has(.asmcard){max-width:1280px}
 .asm .kq{font-size:30px;font-weight:700;line-height:1.55;min-height:8em}
 .asm .kq .qr{color:var(--red)}
 .asm .kq.screen{animation:none}
-.asm-btn{margin-top:14px}
+.asm-btn{margin-top:14px;min-height:64px}
+.asm .assemble{transition:gap 2.6s ease-in-out}
+.asm .kq .w{opacity:0;transform:translateY(8px);display:inline-block;transition:opacity .35s,transform .35s}
+.asm .kq .w.on{opacity:1;transform:none}
+.gtt{font-size:46px;color:#6d4c41;margin:0 0 6px;font-weight:800}
 @media(max-width:900px){.asm{grid-template-columns:1fr;text-align:center}.asm .kq{font-size:24px;min-height:0}}
 .rescue{position:relative;overflow:hidden;background:none;box-shadow:none;color:var(--ink);text-align:center;padding:18px 10px 24px;min-height:560px}
 .fwcv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
@@ -1162,7 +1166,7 @@ function runZone(zi) {
 }
 function hiddenChallenge(zi) {
   const L = ZONES[zi].hidden.list; let k = 0;
-  const finish = () => { state.hd[zi] = true; good(); zoneEnd(zi); };
+  const finish = () => { state.hd[zi] = true; good(); if (zi === 2) assemble(); else zoneEnd(zi); };
   const show = () => {
     const h = L[k], last = k === L.length - 1;
     multiPick({ zi, hidden: 1, title: `Thử thách ẩn ${k + 1}/${L.length} · ${h.title}`, intro: narrator("happy", h.text), endLabel: "Hoàn thành ▶", next: finish }, h.m, last ? null : () => { k++; show(); });
@@ -1181,14 +1185,21 @@ function zoneEnd(zi) {
 
 /* ===== GHÉP CHÌA KHÓA ===== */
 async function assemble() {
-  const s = screen(`<div class="card center asmcard"><h1>🔑 Ghép chìa khóa!</h1>
+  const s = screen(`<div class="card center asmcard"><h1>🎉 Chúc mừng đội đã hoàn thành Thử thách ẩn!</h1>
     <div class="asm"><div class="akey"><div class="assemble" id="as">${[0, 1, 2].map(i => `<div>${piece(i, 130)}</div>`).join("")}</div>
       <div class="lg">${SKILLS.map((n, i) => `<span><b style="color:${KCOL[i]}">●</b> ${esc(n)}</span>`).join("")}</div></div>
       <div class="kq" id="kq"></div></div>
     <p class="asm-btn" id="after"></p></div>`);
   setSkip(gate);
-  await wait(700); $("#as", s).classList.add("joined"); await wait(1900); good(); setTimeout(() => tone([880, 1100, 1320]), 300);
-  $("#kq", s).innerHTML = `“3 mảnh ghép lại là 3 kỹ năng tự bảo vệ của các em.<br><span class="qr">Chiếc chìa khóa này không mở cửa bằng sức mạnh, mà bằng sự hiểu biết.”</span>`;
+  const alive = () => true;
+  await wait(900); if (!alive()) return;
+  $("#as", s).classList.add("joined"); await wait(2900); if (!alive()) return;
+  good(); setTimeout(() => tone([880, 1100, 1320]), 300);
+  const W = t => t.split(" ").map(w => `<span class="w">${w}</span>`).join(" ");
+  $("#kq", s).innerHTML = `${W("“3 mảnh ghép lại là 3 kỹ năng tự bảo vệ của các em.")}<br><span class="qr">${W("Chiếc chìa khóa này không mở cửa bằng sức mạnh, mà bằng sự hiểu biết.”")}</span>`;
+  await wait(500);
+  for (const w of s.querySelectorAll(".w")) { if (!alive()) return; w.classList.add("on"); await wait(260); }
+  await wait(400); if (!alive()) return;
   $("#after", s).innerHTML = `<button class="btn green" id="g">Đến cổng cuối ▶</button>`;
   $("#g", s).onclick = gate;
 }
@@ -1202,7 +1213,7 @@ function door(open) {
   </svg>`;
 }
 function gate() {
-  const s = screen(`<div class="card center"><span class="zone">Cổng cuối</span>
+  const s = screen(`<div class="card center"><h1 class="gtt">Cổng cuối</h1>
     <div style="display:flex;justify-content:center;margin:8px 0">${door(false)}</div>
     <div class="quote">Cổng chỉ mở khi cả đội có <b>người tin cậy</b>…</div>
     <div class="ask">🌳 Chúng mình hãy cùng làm <b>Cây tin cậy</b>. Khi xong sẽ nhận được mật khẩu để mở cửa nhé!</div>
