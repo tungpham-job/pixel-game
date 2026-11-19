@@ -225,7 +225,11 @@ main:has(.rescue),main:has(.asmcard){max-width:1280px}
 .rs-sks .sk{padding:8px 16px;font-size:18px;box-shadow:none;animation:in .8s .5s both}
 @keyframes dance{0%,100%{transform:translateY(0) rotate(-7deg)}25%{transform:translateY(-28px) rotate(7deg)}50%{transform:translateY(0) rotate(-7deg)}75%{transform:translateY(-28px) rotate(7deg)}}
 .rs-quote{font-size:30px;font-weight:800;max-width:780px;margin:16px auto 12px;line-height:1.35;animation:in 1s 1.1s both}
-.rs-thanks{color:var(--soft);font-weight:700;margin:12px 0 0}
+.rs-title{margin:14px 0 26px}
+.rs-mid{margin:10px 0 34px}
+.rs-sks{margin:0 0 40px;gap:14px}
+.rs-thanks{color:#e65100;font-size:28px;font-weight:800;margin:0}
+.rs-btn{margin:40px 0 0}
 @media (max-width:760px){.rs-grid{grid-template-columns:1fr}.rs-side.left,.rs-side.right{align-items:center}.rs-title{font-size:32px}.rs-quote{font-size:24px}}
 .mbox{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:3px solid var(--line);border-radius:14px;padding:8px 12px;max-width:560px;background:#fff;min-height:54px}
 .mbox:focus-within{border-color:var(--blue)}
@@ -1346,13 +1350,11 @@ function rescue() {
   state.done = true;
   const sk = (cls, ic, txt) => `<div class="sk ${cls}"><span style="font-size:24px">${ic}</span>${esc(txt)}</div>`;
   const s = screen(`<div class="card rescue"><canvas class="fwcv"></canvas><div class="rs-in">
-    <div class="rs-sub">${esc("Biệt đội " + state.team)}</div>
     <h1 class="rs-title">🎉 Pixel đã được giải cứu! 🎉</h1>
     <div class="rs-mid"><div class="dance">${pixel("joy", 220)}</div></div>
     <div class="rs-sks">${sk("t1", "✋", SKILLS[0])}${sk("t2", "🛡️", SKILLS[1])}${sk("t3", "🤝", SKILLS[2])}${sk("t4", "🌳", "Cây tin cậy")}</div>
-    <div class="rs-quote">“Em không có lỗi khi gặp chuyện xấu trên mạng, và em luôn có thể kể với người lớn.”</div>
     <p class="rs-thanks">Cảm ơn ${esc(thanksNames())} đã cùng giải cứu Pixel!</p>
-    <p style="margin:18px 0 0"><button class="btn" id="cert">⬇ Tải giấy chứng nhận</button></p></div></div>`);
+    <p class="rs-btn"><button class="btn" id="cert">⬇ Tải giấy chứng nhận</button></p></div></div>`);
   $("#cert", s).onclick = downloadCert;
   fireworks($(".rescue", s), $(".fwcv", s));
   good(); setTimeout(() => tone([523, 659, 784, 1046, 784, 1046, 1318]), 350); confetti();
