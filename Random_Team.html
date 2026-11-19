@@ -54,6 +54,8 @@ input.gnote:focus{border-color:#f5c542;background:#fff8cc}
 .chip.ball{width:44px;height:44px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:20px}
 .chip.fl{animation:bob 1.1s ease-in-out infinite alternate}
 @keyframes bob{to{translate:0 -9px}}
+#belt{position:absolute;left:0;right:0;height:48px;background:repeating-linear-gradient(90deg,#3b4560 0 20px,#4a5676 20px 40px);border-top:3px solid #222b40;border-bottom:3px solid #222b40;box-shadow:0 3px 8px rgba(0,0,0,.25);display:none;animation:bm .6s linear infinite}
+@keyframes bm{to{background-position:-40px 0}}
 #drum{position:absolute;top:50%;left:50%;width:560px;height:380px;margin:-190px 0 0 -280px;border:3px dashed #8c97b0;border-radius:24px;background:rgba(255,255,255,.7);display:none}
 #drum span{position:absolute;left:0;right:0;bottom:6px;text-align:center;font-size:15px;color:var(--soft)}
 #skip{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:60;display:none;border:0;border-radius:999px;background:#1d2a44;color:#fff;font-weight:700;padding:10px 24px;font-size:16px;opacity:.9}
@@ -92,7 +94,7 @@ select{width:100%;font:inherit;padding:9px 12px;border-radius:10px;border:2px so
   <div class="box" role="dialog" aria-label="Thiết lập">
     <h2><span>⚙️ Thiết lập</span><button id="x" aria-label="Đóng">✕</button></h2>
     <div class="fld"><label for="fx">Kiểu hiệu ứng</label>
-      <select id="fx"><option value="0">1. Chia bài</option><option value="1">2. Máy quay số</option><option value="2">3. Lồng quay xổ số</option><option value="3">4. Nam châm</option><option value="4">5. Giải mã ma trận</option></select></div>
+      <select id="fx"><option value="0">1. Băng chuyền</option><option value="1">2. Máy quay số</option><option value="2">3. Lồng quay xổ số</option><option value="3">4. Nam châm</option><option value="4">5. Giải mã ma trận</option></select></div>
     <div class="fld"><label for="sex">Cách chia theo giới tính</label>
       <select id="sex"><option value="sep">Nam nữ riêng</option><option value="mix">Nam nữ chung</option></select></div>
     <div class="fld"><label for="secs">Thời gian hiệu ứng</label>
@@ -103,7 +105,7 @@ select{width:100%;font:inherit;padding:9px 12px;border-radius:10px;border:2px so
     <div class="acts"><button id="cancel">Đóng</button><button class="ok" id="save">Lưu</button></div>
   </div>
 </div>
-<div id="fxl"><div id="drum"><span>Lồng quay</span></div></div>
+<div id="fxl"><div id="belt"></div><div id="drum"><span>Lồng quay</span></div></div>
 <button id="skip">Bỏ qua hiệu ứng ▶▶</button>
 <canvas id="cv"></canvas>
 
@@ -262,8 +264,18 @@ function runFx(kind, T, done) {
   $("#skip").style.display = "block";
   const W = innerWidth, H = innerHeight, sp = n => (n <= 1 ? 0 : 1 / (n - 1));
   if (kind === 0) {
-    const hr = $("#hint").getBoundingClientRect(), cy = hr.height ? hr.top + hr.height / 2 - 20 : 68, dur = clamp(T * 0.06, 350, 800), t0 = T * 0.05, step = Math.max(30, (T * 0.92 - t0 - dur) * sp(N));
-    rr.forEach((li, i) => { const c = chip(li.dataset.name, W / 2 - 50, cy, "card"); c.style.zIndex = 500 - i; at(t0 + i * step, () => fly(c, li, dur, -50, i % 2 ? 9 : -9)); });
+    const hr = $("#hint").getBoundingClientRect(), cy = hr.height ? hr.top + hr.height / 2 - 20 : 68;
+    const belt = $("#belt"); belt.style.top = (cy - 6) + "px"; belt.style.display = "block";
+    const bd = clamp(T * 0.07, 600, 1100), dd = clamp(T * 0.05, 300, 600), t0 = T * 0.04, step = Math.max(30, (T * 0.92 - t0 - bd - dd) * sp(N));
+    rr.forEach((li, i) => {
+      at(t0 + i * step, () => {
+        const c = chip(li.dataset.name, W + 10, cy, "card"), tx = li.getBoundingClientRect().left + 24;
+        const a = c.animate([{ transform: "translateX(0)" }, { transform: `translateX(${tx - (W + 10)}px)` }], { duration: bd, easing: "linear", fill: "both" });
+        R.anims.push(a);
+        a.onfinish = () => { a.cancel(); c.style.left = tx + "px"; fly(c, li, dd, -8, 0); };
+      });
+    });
+    at(T * 0.96, () => { belt.style.display = "none"; });
   }
   if (kind === 1) {
     lis.forEach(l => { l.classList.remove("ph"); l.classList.add("spin"); });
@@ -310,7 +322,7 @@ function finishFx(skip) {
   if (!R) return;
   const r = R; R = null;
   r.timers.forEach(t => { clearTimeout(t); clearInterval(t); }); cancelAnimationFrame(r.raf); r.anims.forEach(a => { a.onfinish = null; a.cancel(); });
-  fxl.querySelectorAll(".chip").forEach(c => c.remove()); drum.style.display = "none";
+  fxl.querySelectorAll(".chip").forEach(c => c.remove()); drum.style.display = "none"; $("#belt").style.display = "none";
   document.querySelectorAll(".mem").forEach(l => { if (l.classList.contains("ph") || l.classList.contains("spin")) reveal(l); });
   $("#skip").style.display = "none"; confetti(); chime(); r.done();
 }
