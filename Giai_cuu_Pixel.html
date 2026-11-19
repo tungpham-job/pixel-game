@@ -848,12 +848,22 @@ function g2B(ctx) {
 }
 function g2C(ctx) {
   const H = "Nhìn kỹ nhé! Chữ sai chính tả hoặc đuôi lạ là dấu hiệu trang giả.";
+  const H2 = "Link này là trang quen thuộc, không có chữ lạ. Tìm tin có link kèm quà, chữ “miễn phí” hoặc đuôi lạ nhé!";
+  const msg = (who, m) => `<div style="text-align:left"><div style="font-size:20px;color:var(--soft)">${who}</div><div style="font-size:22px;margin-top:4px">“${m}”</div></div>`;
   ctx.title = "Săn link giả"; ctx.intro = narrator("happy", "Kẻ xấu hay làm link giống thật nhưng sai một chút. Đội mình nhìn thật kỹ nhé!");
   pickRounds(ctx, [
     { q: "Đâu là địa chỉ thật của YouTube?", mono: 1, grid: 1, g: "Đúng! youtube.com là trang thật.", o: [{ t: "youtube.com", ok: 1 }, { t: "yutube-mienphi.com", h: H }, { t: "youtube.free-gift.xyz", h: H }, { t: "youtu.be-bonus.top", h: H }] },
     { q: "Đâu là địa chỉ thật của Google?", mono: 1, grid: 1, g: "Chuẩn! google.com mới đúng.", o: [{ t: "gooogle.com", h: "Thừa chữ o! " + H }, { t: "google.com", ok: 1 }, { t: "g00gle.com", h: "Chữ o bị đổi thành số 0! " + H }, { t: "google-quatang.top", h: H }] },
-    { q: "Đâu là địa chỉ thật của Zalo?", mono: 1, grid: 1, g: "Giỏi quá! Luôn nhìn kỹ từng chữ trước khi bấm.", o: [{ t: "za1o.me", h: "Chữ l bị đổi thành số 1! " + H }, { t: "zalo.me", ok: 1 }, { t: "zalo-nhanqua.xyz", h: H }, { t: "zaloo.vn-login.com", h: H }] },
-    { q: "Đâu là địa chỉ thật của Facebook?", mono: 1, grid: 1, g: "Chuẩn! facebook.com mới đúng. Em nhớ nhìn kỹ từng chữ nhé.", o: [{ t: "faceb00k.com", h: "Chữ o bị đổi thành số 0! " + H }, { t: "facebook-login.top", h: H }, { t: "facebook.com", ok: 1 }, { t: "fb-nhanqua.xyz", h: H }] }
+    { q: "Tin nhắn nào có link đáng ngờ nhất?", grid: 1, g: "Đúng! Người lạ rủ vào nhóm “kín” kèm quà và link đuôi lạ, em DỪNG và không bấm.", o: [
+      { t: msg("Cô chủ nhiệm (nhóm chat của lớp)", "Mai học tin học, các em vào: <b>scratch.mit.edu</b>"), h: H2 },
+      { t: msg("Bạn lạ trong game (chưa từng quen ngoài đời)", "Vào nhóm game kín của tụi mình đi, có nhiều quà: <b>nhom-game-kin.top</b>"), ok: 1 },
+      { t: msg("Mẹ (có trong danh bạ)", "Con xem công thức nấu ăn: <b>youtube.com</b>"), h: H2 }
+    ] },
+    { q: "Còn lần này, tin nhắn nào có link đáng ngờ nhất?", grid: 1, g: "Đúng! Người lạ biết sinh nhật em và tặng quà qua link lạ, đó là chiêu để em bấm vào.", o: [
+      { t: msg("Số điện thoại lạ (không có trong danh bạ)", "Chúc mừng sinh nhật! Nhận quà sinh nhật tại: <b>quasinhnhat-vip.xyz</b>"), ok: 1 },
+      { t: msg("Bố (có trong danh bạ)", "Con xem thời tiết ngày mai: <b>google.com</b>"), h: H2 },
+      { t: msg("Cô chủ nhiệm (nhóm chat của lớp)", "Họp lớp online lúc 8 giờ: <b>meet.google.com</b>"), h: H2 }
+    ] }
   ]);
 }
 function g2D(ctx) {
