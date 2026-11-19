@@ -96,7 +96,7 @@ select{width:100%;font:inherit;padding:9px 12px;border-radius:10px;border:2px so
     <div class="fld"><label for="fx">Kiểu hiệu ứng</label>
       <select id="fx"><option value="1">1. Máy quay số</option><option value="2">2. Lồng quay xổ số</option><option value="3">3. Nam châm</option><option value="4">4. Giải mã ma trận</option><option value="0">5. Băng chuyền</option></select></div>
     <div class="fld"><label for="sex">Cách chia theo giới tính</label>
-      <select id="sex"><option value="sep">Nam nữ riêng</option><option value="mix">Nam nữ chung</option></select></div>
+      <select id="sex"><option value="mix">Nam nữ chung</option><option value="sep">Nam nữ riêng</option></select></div>
     <div class="fld"><label for="secs">Thời gian hiệu ứng</label>
       <input type="text" id="secs" inputmode="numeric" style="width:90px;text-align:center" maxlength="3"> <span style="color:var(--soft)">giây</span></div>
     <div class="fld"><label for="fs">Cỡ chữ trong bảng nhóm</label>
@@ -111,7 +111,7 @@ select{width:100%;font:inherit;padding:9px 12px;border-radius:10px;border:2px so
 
 <script>
 const $ = (s, r = document) => r.querySelector(s);
-const S = { sex: "sep", secs: 15, filter: false, fx: 1, fs: 1 };
+const S = { sex: "mix", secs: 15, filter: false, fx: 1, fs: 1 };
 let STU = [];
 const FS = [13, 16, 19, 24];
 const applyFs = () => { $("#groups").style.setProperty("--mfs", FS[S.fs] + "px"); fitCols(); };
@@ -122,8 +122,8 @@ function fitCols() {
   let w = 0; STU.forEach(s => { w = Math.max(w, c.measureText(s.name).width); });
   g.style.setProperty("--cw", Math.max(230, Math.ceil(w + 64)) + "px");
 }
-try { Object.assign(S, JSON.parse(localStorage.getItem("rt_settings4") || "null") || {}); } catch (e) {}
-const saveSet = () => { try { localStorage.setItem("rt_settings4", JSON.stringify(S)); } catch (e) {} };
+try { Object.assign(S, JSON.parse(localStorage.getItem("rt_settings5") || "null") || {}); } catch (e) {}
+const saveSet = () => { try { localStorage.setItem("rt_settings5", JSON.stringify(S)); } catch (e) {} };
 
 applyFs();
 /* ===== ĐỌC CSV ===== */
