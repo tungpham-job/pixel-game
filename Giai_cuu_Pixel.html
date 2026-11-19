@@ -833,17 +833,17 @@ function g2A(ctx) {
 }
 function g2B(ctx) {
   ctx.title = "Thật hay Lừa?"; ctx.intro = narrator("happy", "Có nhiều tin nhắn xuất hiện. Đội mình phân biệt <b>thật</b> hay <b>lừa đảo</b> nhé!");
-  const card = (who, t) => `<div><div style="font-size:15px;color:var(--soft)">${who}</div><div style="font-size:24px">${t}</div></div>`;
+  const card = (who, t) => `<div><div style="font-size:20px;color:var(--soft)">${who}</div><div style="font-size:24px">${t}</div></div>`;
   cardsJudge(ctx, [
-    { h: card("Mẹ (có trong danh bạ)", "“Con nhớ về ăn cơm lúc 6 giờ nhé!”"), a: 0, why: "Tin từ mẹ trong danh bạ, bình thường." },
-    { h: card("Số lạ", "“🎁 Trúng 1 tỷ đồng! Bấm link nhận ngay!”"), a: 1, why: "Trúng thưởng bất ngờ + bấm link là lừa đảo." },
-    { h: card("Nhóm lớp (cô chủ nhiệm)", "“Mai lớp mình học lúc 7 giờ 30 nhé!”"), a: 0, why: "Tin từ nhóm lớp quen thuộc, bình thường." },
-    { h: card("“Hỗ trợ game”", "“Tài khoản sắp bị khóa! Gửi mật khẩu để xác nhận!”"), a: 1, why: "Không ai thật sự xin mật khẩu của em." },
-    { h: card("Bạn lạ trong game", "“Mình là admin, đưa mình mật khẩu mình nâng cấp acc cho nhé!”"), a: 1, why: "Giả làm quản trị viên để lấy mật khẩu." },
-    { h: card("Nhóm lớp (cô chủ nhiệm)", "“Nhắc các em mang áo mưa vào ngày mai.”"), a: 0, why: "Thông báo bình thường từ nhóm lớp." },
-    { h: card("Số lạ", "“Bấm link để xem ai vừa xem trang cá nhân của bạn!”"), a: 1, why: "Link tò mò như vậy thường để lừa em bấm vào." },
-    { h: card("Số lạ", "“Mình là bạn của bố cháu, bố cháu bị tai nạn, chuyển tiền gấp vào tài khoản này!”"), a: 1, why: "Gây hoảng sợ để đòi tiền. Hãy gọi ngay cho bố mẹ để kiểm tra." },
-    { h: card("Số lạ", "“Con ơi, cô là bạn của mẹ, mẹ bảo cô đón con, cho cô biết con đang ở đâu nhé!”"), a: 1, why: "Người lạ hỏi vị trí để đón em: phải gọi ngay cho bố mẹ kiểm tra, không nói em đang ở đâu." }
+    { h: card("Số điện thoại của Mẹ (có trong danh bạ)", "“Con nhớ về ăn cơm lúc 6 giờ nhé!”"), a: 0, why: "Tin từ mẹ trong danh bạ, bình thường." },
+    { h: card("Số điện thoại lạ (không có trong danh bạ)", "“🎁 Trúng 1 tỷ đồng! Bấm link nhận ngay!”"), a: 1, why: "Trúng thưởng bất ngờ + bấm link là lừa đảo." },
+    { h: card("Nhóm chat của lớp (cô chủ nhiệm nhắn)", "“Mai lớp mình học lúc 7 giờ 30 nhé!”"), a: 0, why: "Tin từ nhóm lớp quen thuộc, bình thường." },
+    { h: card("Tự xưng “Hỗ trợ game” (số điện thoại lạ, không có trong danh bạ)", "“Tài khoản sắp bị khóa! Gửi mật khẩu để xác nhận!”"), a: 1, why: "Không ai thật sự xin mật khẩu của em." },
+    { h: card("Người lạ nhắn tin trong game (chưa từng quen ngoài đời)", "“Mình là admin, đưa mình mật khẩu mình nâng cấp acc cho nhé!”"), a: 1, why: "Giả làm quản trị viên để lấy mật khẩu." },
+    { h: card("Nhóm chat của lớp (cô chủ nhiệm nhắn)", "“Nhắc các em mang áo mưa vào ngày mai.”"), a: 0, why: "Thông báo bình thường từ nhóm lớp." },
+    { h: card("Số điện thoại lạ (không có trong danh bạ)", "“Bấm link để xem ai vừa xem trang cá nhân của bạn!”"), a: 1, why: "Link tò mò như vậy thường để lừa em bấm vào." },
+    { h: card("Số điện thoại lạ (không có trong danh bạ)", "“Mình là bạn của bố cháu, bố cháu bị tai nạn, chuyển tiền gấp vào tài khoản này!”"), a: 1, why: "Gây hoảng sợ để đòi tiền. Hãy gọi ngay cho bố mẹ để kiểm tra." },
+    { h: card("Số điện thoại lạ (không có trong danh bạ)", "“Con ơi, cô là bạn của mẹ, mẹ bảo cô đón con, cho cô biết con đang ở đâu nhé!”"), a: 1, why: "Người lạ hỏi vị trí để đón em: phải gọi ngay cho bố mẹ kiểm tra, không nói em đang ở đâu." }
   ], [{ t: "✅ Thật", c: "k" }, { t: "⚠️ Lừa đảo", c: "d" }]);
 }
 function g2C(ctx) {
