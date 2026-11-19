@@ -10,29 +10,36 @@
 body{margin:0;font:18px/1.45 "Segoe UI","Be Vietnam Pro",Roboto,system-ui,sans-serif;color:var(--ink);min-height:100vh;
   background:linear-gradient(160deg,#dff3ff 0%,#efe6ff 55%,#ffe9f1 100%);background-attachment:fixed}
 button{font:inherit;cursor:pointer}
-header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:10px 22px;background:rgba(255,255,255,.92);backdrop-filter:blur(6px);border-bottom:2px solid var(--line)}
-header h1{margin:0;font-size:24px}
+header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px 16px;padding:8px 18px;background:rgba(255,255,255,.95);backdrop-filter:blur(6px);border-bottom:2px solid var(--line);flex-wrap:wrap}
+header h1{margin:0;font-size:22px;white-space:nowrap}
+.hinfo{font-size:14px;color:var(--soft);padding-left:14px;border-left:2px solid var(--line);min-width:0}
+.sp{flex:1}
+.ctlb{display:flex;align-items:center;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.clb{padding:0 12px;font-weight:700;font-size:16px;white-space:nowrap}
+input#gcount{width:64px;text-align:center;font-size:20px;padding:6px 4px;border:0;border-left:2px solid var(--line);border-radius:0;max-width:none}
+.ctlb .btn{margin:0;border-radius:0;box-shadow:none;font-size:17px;padding:9px 20px}
+.ctlb .btn:active{transform:none;box-shadow:none;background:#1f5fb8}
+.err{position:absolute;right:70px;top:100%;margin:6px 0 0;background:#fff;border:2px solid var(--red);border-radius:10px;padding:6px 14px;color:var(--red);font-weight:700;font-size:15px;display:none;box-shadow:0 6px 18px rgba(0,0,0,.15)}
 .gear{width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:#fff;font-size:22px;line-height:1;padding:0}
 .gear:hover{background:#f1f6ff}.gear:disabled{opacity:.4;cursor:default}
-main{max-width:1500px;margin:0 auto;padding:22px 18px 80px}
-.ctl{background:var(--card);border-radius:22px;padding:22px 28px;box-shadow:0 8px 28px rgba(60,80,140,.14);max-width:720px;margin:0 auto 22px;text-align:center}
-.ctl label{font-weight:700;font-size:20px;margin-right:10px}
+main{max-width:1500px;margin:0 auto;padding:14px 18px 80px}
 input[type=text]{font:inherit;font-weight:700;padding:10px 14px;border-radius:12px;border:3px solid var(--line);color:var(--ink);background:#fff}
 input[type=text]:focus{outline:none;border-color:var(--blue)}
-#gcount{width:110px;text-align:center;font-size:24px}
 .btn{border:0;border-radius:16px;background:var(--blue);color:#fff;font-weight:800;font-size:22px;padding:12px 30px;box-shadow:0 5px 0 #1f5fb8;margin-left:14px}
 .btn:active{transform:translateY(3px);box-shadow:0 2px 0 #1f5fb8}.btn:disabled{opacity:.5;cursor:default}
-.info{margin:12px 0 0;font-size:15px;color:var(--soft)}.err{color:var(--red);font-weight:700;min-height:24px;margin:8px 0 0}
 .lnk{background:none;border:0;color:var(--blue);text-decoration:underline;font-size:15px;padding:0}
-#groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;align-items:start}
+#groups{--mfs:19px;display:grid;grid-template-columns:repeat(auto-fill,minmax(max(230px,calc(var(--mfs)*12)),1fr));gap:16px;align-items:start}
 .grp{background:#fff;border-radius:16px;box-shadow:0 4px 16px rgba(60,80,140,.14);overflow:hidden;border:2px solid var(--line)}
-.gh{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg)}
+.gh{position:relative;background:var(--bg);padding:24px 0 8px 10px}
+.gtop{display:flex;align-items:center;gap:8px}
 .gn{flex:none;width:34px;height:34px;border-radius:50%;background:var(--fg);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px}
-.gname{flex:1;min-width:0;font-size:17px;padding:5px 8px;border-width:2px;border-radius:9px}
-.gc{flex:none;font-size:13px;color:var(--fg);font-weight:700;min-width:22px;text-align:right}
+input.gname{flex:1;min-width:0;width:100%;max-width:none;font-size:calc(var(--mfs,19px)*.9);padding:5px 8px;border-width:2px;border-right:0;border-radius:9px 0 0 9px}
+.gc{position:absolute;top:0;right:0;background:var(--fg);color:#fff;font-size:13px;font-weight:700;line-height:1;padding:4px 10px 5px;border-radius:0 0 0 10px;min-width:30px;text-align:center}
+input.gnote{display:block;max-width:none;width:100%;border:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0;background:#fffbe6;font-size:calc(var(--mfs,19px)*.8);padding:6px 12px;font-weight:600}
+input.gnote:focus{border-color:#f5c542;background:#fff8cc}
 .glist{list-style:none;margin:0;padding:0;min-height:44px}
 .glist.over{background:#f1f6ff;box-shadow:inset 0 0 0 2px var(--blue)}
-.mem{display:flex;align-items:center;gap:8px;padding:7px 12px;border-top:1px solid var(--line);font-size:19px;font-weight:600;user-select:none;cursor:grab;min-height:42px}
+.mem{display:flex;align-items:center;gap:8px;padding:7px 12px;border-top:1px solid var(--line);font-size:var(--mfs,19px);font-weight:600;user-select:none;cursor:grab;min-height:calc(var(--mfs,19px)*2.2)}
 .mem .grip{flex:none;width:12px;height:18px;background:radial-gradient(circle,#b9c6e0 1.6px,transparent 1.8px) 0 0/6px 6px;touch-action:none}
 .mem .mn{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mem.ph .mn{visibility:hidden}.mem.spin .mn{color:#8c97b0}.mem.pop{animation:pop .45s}
@@ -68,19 +75,14 @@ select{width:100%;font:inherit;padding:9px 12px;border-radius:10px;border:2px so
 <body>
 <header>
   <h1>Random Team</h1>
+  <div class="hinfo"><span id="info">Đang đọc randomlist.csv…</span>
+    <span id="picker" style="display:none"><button class="lnk" id="pick">Chọn file randomlist.csv</button><input type="file" id="file" accept=".csv,text/csv,text/plain" style="display:none"></span></div>
+  <span class="sp"></span>
+  <div class="ctlb"><span class="clb">Số nhóm</span><input type="text" id="gcount" inputmode="numeric" value="6" maxlength="3" aria-label="Số lượng nhóm"><button class="btn" id="go">Chia nhóm</button></div>
   <button class="gear" id="gear" aria-label="Thiết lập" title="Thiết lập">⚙️</button>
+  <p class="err" id="err"></p>
 </header>
 <main>
-  <div class="ctl">
-    <label for="gcount">Số lượng nhóm</label><input type="text" id="gcount" inputmode="numeric" value="6" maxlength="3">
-    <button class="btn" id="go">Bắt đầu chia nhóm</button>
-    <p class="err" id="err"></p>
-    <p class="info" id="info">Đang đọc randomlist.csv…</p>
-    <p class="info" id="picker" style="display:none">
-      <button class="lnk" id="pick">Chọn file randomlist.csv</button>
-      <input type="file" id="file" accept=".csv,text/csv,text/plain" style="display:none">
-    </p>
-  </div>
   <p class="hint" id="hint" style="display:none">Bấm vào ô tên nhóm để sửa. Kéo tên thành viên để đổi thứ tự hoặc chuyển sang nhóm khác.</p>
   <div id="groups"></div>
 </main>
@@ -95,6 +97,8 @@ select{width:100%;font:inherit;padding:9px 12px;border-radius:10px;border:2px so
       <input type="text" id="secs" inputmode="numeric" style="width:90px;text-align:center" maxlength="3"> <span style="color:var(--soft)">giây</span></div>
     <div class="fld"><label for="fx">Kiểu hiệu ứng</label>
       <select id="fx"><option value="0">1. Chia bài</option><option value="1">2. Máy quay số</option><option value="2">3. Lồng quay xổ số</option><option value="3">4. Nam châm</option><option value="4">5. Giải mã ma trận</option></select></div>
+    <div class="fld"><label for="fs">Cỡ chữ trong bảng nhóm</label>
+      <select id="fs"><option value="0">Nhỏ</option><option value="1">Vừa</option><option value="2">Lớn</option><option value="3">Rất lớn</option></select></div>
     <label class="chk"><input type="checkbox" id="flt">Lọc thành viên</label>
     <div class="acts"><button id="cancel">Đóng</button><button class="ok" id="save">Lưu</button></div>
   </div>
@@ -105,10 +109,13 @@ select{width:100%;font:inherit;padding:9px 12px;border-radius:10px;border:2px so
 
 <script>
 const $ = (s, r = document) => r.querySelector(s);
-const S = { sex: "sep", secs: 15, filter: false, fx: 1 };
+const S = { sex: "sep", secs: 15, filter: false, fx: 1, fs: 1 };
+const FS = [16, 19, 24, 30];
+const applyFs = () => $("#groups").style.setProperty("--mfs", FS[S.fs] + "px");
 try { Object.assign(S, JSON.parse(localStorage.getItem("rt_settings") || "null") || {}); } catch (e) {}
 const saveSet = () => { try { localStorage.setItem("rt_settings", JSON.stringify(S)); } catch (e) {} };
 
+applyFs();
 /* ===== ĐỌC CSV ===== */
 const noDia = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D").toLowerCase().trim();
 function gender(s) { const g = noDia(s); if (/^(nam|m|male|trai|boy)$/.test(g)) return "M"; if (/^(nu|f|female|gai|girl)$/.test(g)) return "F"; return "?"; }
@@ -140,13 +147,13 @@ let STU = [];
 function setStudents(rows) {
   STU = toStudents(rows);
   const m = STU.filter(s => s.g === "M").length, f = STU.filter(s => s.g === "F").length;
-  $("#info").innerHTML = STU.length ? `Đã đọc <b>${STU.length}</b> học sinh (nam ${m}, nữ ${f}) từ randomlist.csv. <button class="lnk" id="pick2">Chọn file khác</button>` : "File không có học sinh nào. Kiểm tra lại cột 1 (tên).";
-  $("#picker").style.display = STU.length ? "none" : "block";
+  $("#info").innerHTML = STU.length ? `<b>${STU.length}</b> học sinh (${m} nam, ${f} nữ) · <button class="lnk" id="pick2">Đổi file</button>` : "File không có học sinh nào. Kiểm tra cột 1 (tên). ";
+  $("#picker").style.display = STU.length ? "none" : "inline";
   const p2 = $("#pick2"); if (p2) p2.onclick = () => $("#file").click();
 }
 function loadFile(f) { const rd = new FileReader(); rd.onload = () => setStudents(parseCSV(rd.result)); rd.readAsText(f, "utf-8"); }
 fetch("randomlist.csv", { cache: "no-store" }).then(r => { if (!r.ok) throw 0; return r.text(); }).then(t => setStudents(parseCSV(t)))
-  .catch(() => { $("#info").textContent = "Trình duyệt không tự đọc được randomlist.csv (mở file trực tiếp từ máy sẽ bị chặn)."; $("#picker").style.display = "block"; });
+  .catch(() => { $("#info").textContent = "Chưa tự đọc được randomlist.csv. "; $("#picker").style.display = "inline"; });
 $("#pick").onclick = () => $("#file").click();
 $("#file").onchange = e => { if (e.target.files[0]) loadFile(e.target.files[0]); e.target.value = ""; };
 
@@ -188,11 +195,12 @@ function renderGroups(groups) {
   const w = $("#groups"); w.innerHTML = "";
   groups.forEach((g, i) => {
     const d = document.createElement("div"); d.className = "grp"; d.style.setProperty("--bg", BG[i % 8]); d.style.setProperty("--fg", FG[i % 8]);
-    d.innerHTML = `<div class="gh"><span class="gn">${i + 1}</span><input type="text" class="gname" placeholder="Tên nhóm" maxlength="30" aria-label="Tên nhóm ${i + 1}"><span class="gc">${g.length}</span></div>
+    d.innerHTML = `<div class="gh"><span class="gc" title="Số thành viên">${g.length}</span><div class="gtop"><span class="gn">${i + 1}</span><input type="text" class="gname" placeholder="Tên nhóm" maxlength="30" aria-label="Tên nhóm ${i + 1}"></div></div>
+      <input type="text" class="gnote" placeholder="Ghi chú (điểm, nhận xét...)" maxlength="80" aria-label="Ghi chú nhóm ${i + 1}">
       <ul class="glist">${g.map(s => `<li class="mem" data-name="${esc(s.name)}"><span class="grip"></span><span class="mn">${esc(s.name)}</span></li>`).join("")}</ul>`;
     w.appendChild(d);
   });
-  w.querySelectorAll(".gname").forEach(inp => inp.addEventListener("keydown", e => { if (e.key === "Enter") inp.blur(); }));
+  w.querySelectorAll(".gname,.gnote").forEach(inp => inp.addEventListener("keydown", e => { if (e.key === "Enter") inp.blur(); }));
 }
 const updCounts = () => document.querySelectorAll(".grp").forEach(g => { $(".gc", g).textContent = g.querySelectorAll(".mem").length; });
 
@@ -304,11 +312,12 @@ $("#skip").onclick = () => finishFx(true);
 /* ===== NÚT BẮT ĐẦU ===== */
 function setBusy(b) { $("#go").disabled = b; $("#gear").disabled = b; $("#gcount").disabled = b; }
 $("#go").onclick = () => {
-  const err = $("#err"); err.textContent = "";
-  if (!STU.length) { err.textContent = "Chưa có danh sách học sinh. Hãy chọn file randomlist.csv."; return; }
+  const err = $("#err"); err.style.display = "none";
+  const fail = m => { err.textContent = m; err.style.display = "block"; clearTimeout(fail.t); fail.t = setTimeout(() => { err.style.display = "none"; }, 5000); };
+  if (!STU.length) { fail("Chưa có danh sách học sinh. Hãy chọn file randomlist.csv."); return; }
   const G = parseInt($("#gcount").value, 10);
-  if (!G || G < 1) { err.textContent = "Nhập số lượng nhóm (từ 1 trở lên)."; return; }
-  if (G > STU.length) { err.textContent = `Số nhóm lớn hơn số học sinh (${STU.length}). Hãy nhập số nhỏ hơn.`; return; }
+  if (!G || G < 1) { fail("Nhập số lượng nhóm (từ 1 trở lên)."); return; }
+  if (G > STU.length) { fail(`Số nhóm lớn hơn số học sinh (${STU.length}). Hãy nhập số nhỏ hơn.`); return; }
   try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); AC.resume && AC.resume(); } catch (e) {}
   renderGroups(divide(STU, G)); $("#hint").style.display = "block"; setBusy(true);
   const first = $("#groups").firstElementChild; if (first) first.scrollIntoView({ block: "nearest" });
@@ -348,13 +357,13 @@ document.addEventListener("pointerup", endDrag); document.addEventListener("poin
 
 /* ===== CỬA SỔ THIẾT LẬP ===== */
 const modal = $("#modal");
-function openSet() { $("#sex").value = S.sex; $("#secs").value = S.secs; $("#fx").value = S.fx; $("#flt").checked = S.filter; modal.classList.add("on"); }
+function openSet() { $("#fs").value = S.fs; $("#sex").value = S.sex; $("#secs").value = S.secs; $("#fx").value = S.fx; $("#flt").checked = S.filter; modal.classList.add("on"); }
 const closeSet = () => modal.classList.remove("on");
 $("#gear").onclick = openSet; $("#x").onclick = closeSet; $("#cancel").onclick = closeSet;
 modal.addEventListener("pointerdown", e => { if (e.target === modal) closeSet(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeSet(); });
 $("#save").onclick = () => {
-  S.sex = $("#sex").value; S.fx = +$("#fx").value; S.filter = $("#flt").checked;
+  S.sex = $("#sex").value; S.fx = +$("#fx").value; S.fs = +$("#fs").value; applyFs(); S.filter = $("#flt").checked;
   const v = parseInt($("#secs").value, 10); S.secs = v >= 1 ? Math.min(v, 300) : 15;
   saveSet(); closeSet();
 };
