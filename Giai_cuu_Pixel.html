@@ -967,13 +967,13 @@ async function g3A(ctx) {
 function g3B(ctx) {
   ctx.title = "Em là người chứng kiến"; ctx.intro = narrator("happy", "Đây là câu chuyện mà <b>đội mình quyết định</b>. Mỗi lựa chọn dẫn tới một kết quả khác nhau. Chọn sai thì quay lại chọn lại nhé!");
   story(ctx, {
-    a: { q: 1, skipTo: "b", text: "Trong nhóm chat lớp, mọi người đang chia sẻ ảnh chế giễu bạn Na. Em sẽ làm gì?", opts: [{ t: "Thả 😂 cho hợp nhóm", to: "a1" }, { t: "Lướt qua, không liên quan đến mình", to: "a2" }, { t: "Nhắn riêng hỏi thăm Na", to: "b" }] },
-    a1: { back: "a", text: "Ảnh được thả cười ngày càng nhiều. Na đọc thấy và khóc. Hôm sau Na không muốn đến lớp… Mình thử chọn lại nhé!" },
-    a2: { back: "a", text: "Chuyện vẫn tiếp diễn. Na cảm thấy một mình, không ai giúp. Mình thử chọn lại nhé!" },
-    b: { q: 1, text: "Na nhắn lại: “Mình buồn lắm… mình sợ nói với cô giáo.” Em làm gì tiếp?", opts: [{ t: "Khuyên Na tự xóa ảnh rồi quên đi", to: "b1" }, { t: "Cùng Na kể với cô giáo hoặc bố mẹ", to: "c" }, { t: "Nhắn vào nhóm chửi lại các bạn", to: "b2" }] },
-    b1: { back: "b", text: "Ảnh đã nằm trong máy của nhiều bạn khác, một mình Na khó xử lý. Cần có người lớn giúp. Mình thử chọn lại nhé!" },
-    b2: { back: "b", text: "Cãi nhau làm chuyện rối hơn, và có thể bị coi là bắt nạt lại. Người lớn mới giúp được. Mình thử chọn lại nhé!" },
-    c: { end: 1, text: "Cô giáo nhắc cả lớp xóa ảnh, xin lỗi Na và hướng dẫn cách cư xử trên mạng. Na thấy nhẹ lòng: “Cảm ơn bạn đã giúp mình!” 🎉" }
+    a: { q: 1, skipTo: "b", text: "Bạn Bống nhờ em giữ bí mật một tin nhắn riêng. Hôm sau, bạn Tuấn biết chuyện, đòi xem và nói sẽ gửi vào nhóm chat cả lớp. Em sẽ làm gì?", opts: [{ t: "Cho Tuấn xem một chút thôi", to: "a1" }, { t: "Mặc kệ, đó là chuyện của hai bạn", to: "a2" }, { t: "Không cho xem và nhắn Tuấn đừng gửi", to: "b" }] },
+    a1: { back: "a", text: "Tuấn chụp lại rồi gửi cả nhóm. Bống xấu hổ và buồn lắm… Mình thử chọn lại nhé!" },
+    a2: { back: "a", text: "Tin nhắn bị gửi vào nhóm lớp. Bống cảm thấy một mình, không ai giúp. Mình thử chọn lại nhé!" },
+    b: { q: 1, text: "Tuấn cười: “Mình vẫn có cách xem!” và vẫn dọa gửi. Em làm gì tiếp?", opts: [{ t: "Giả vờ không biết, chờ xem Tuấn có gửi không", to: "b1" }, { t: "Nói với Bống và cùng kể với cô giáo hoặc bố mẹ", to: "c" }, { t: "Dọa lại Tuấn cho sợ", to: "b2" }] },
+    b1: { back: "b", text: "Tin nhắn có thể bị gửi đi bất cứ lúc nào, và Bống không kịp chuẩn bị. Cần có người lớn giúp ngay. Mình thử chọn lại nhé!" },
+    b2: { back: "b", text: "Dọa lại làm chuyện căng thẳng hơn, và có thể bị coi là bắt nạt lại. Người lớn mới giúp được. Mình thử chọn lại nhé!" },
+    c: { end: 1, text: "Cô giáo nói chuyện với Tuấn, nhắc cả lớp tôn trọng sự riêng tư của bạn. Bống thấy nhẹ lòng: “Cảm ơn bạn đã giúp mình!” 🎉" }
   }, "a");
 }
 function g3C(ctx) {
