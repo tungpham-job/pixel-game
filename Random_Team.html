@@ -170,28 +170,30 @@ $("#file").onchange = e => { if (e.target.files[0]) loadFile(e.target.files[0]);
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function divide(stu, G) {
   const groups = Array.from({ length: G }, () => []);
-  if (!S.filter) {
-    const buckets = S.sex === "sep" ? [stu.filter(s => s.g === "M"), stu.filter(s => s.g === "F"), stu.filter(s => s.g === "?")] : [stu];
-    const order = shuffle([...Array(G).keys()]); let p = 0;
-    buckets.forEach(b => shuffle(b.slice()).forEach(s => { groups[order[p % G]].push(s); p++; }));
-  } else {
-    const map = new Map(), items = [];
+  const items = [];
+  if (S.filter) {
+    const map = new Map();
     stu.forEach(s => {
       if (s.k) { if (!map.has(s.k)) { const it = { m: [] }; map.set(s.k, it); items.push(it); } map.get(s.k).m.push(s); }
       else items.push({ m: [s] });
     });
-    shuffle(items); items.sort((a, b) => b.m.length - a.m.length);
-    items.forEach(it => {
-      const im = it.m.filter(s => s.g === "M").length, iF = it.m.filter(s => s.g === "F").length;
-      let best = [], bs = Infinity;
-      groups.forEach((g, i) => {
-        let sc = g.length * 1000;
-        if (S.sex === "sep") sc += g.filter(s => s.g === (im >= iF ? "M" : "F")).length;
-        if (sc < bs) { bs = sc; best = [i]; } else if (sc === bs) best.push(i);
-      });
-      groups[best[Math.floor(Math.random() * best.length)]].push(...it.m);
-    });
+  } else stu.forEach(s => items.push({ m: [s] }));
+  items.forEach(it => { const im = it.m.filter(s => s.g === "M").length, iF = it.m.filter(s => s.g === "F").length; it.g = im > iF ? "M" : iF > im ? "F" : (im ? "M" : "?"); });
+  const all = [...Array(G).keys()]; let pool = { M: all, F: all, "?": all };
+  if (S.sex === "sep" && G > 1) {
+    const nM = items.filter(i => i.g === "M").reduce((a, i) => a + i.m.length, 0), nF = items.filter(i => i.g === "F").reduce((a, i) => a + i.m.length, 0);
+    if (nM && nF) {
+      let bg = 1, bd = Infinity;
+      for (let k = 1; k < G; k++) { const d = Math.abs(nM / k - nF / (G - k)); if (d < bd) { bd = d; bg = k; } }
+      const ord = shuffle([...all]); pool = { M: ord.slice(0, bg), F: ord.slice(bg), "?": all };
+    }
   }
+  shuffle(items); items.sort((a, b) => b.m.length - a.m.length);
+  items.forEach(it => {
+    const cand = pool[it.g]; let min = Infinity, best = [];
+    cand.forEach(i => { const n = groups[i].length; if (n < min) { min = n; best = [i]; } else if (n === min) best.push(i); });
+    groups[best[Math.floor(Math.random() * best.length)]].push(...it.m);
+  });
   groups.forEach(g => shuffle(g));
   return groups;
 }
