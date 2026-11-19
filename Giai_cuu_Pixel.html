@@ -112,7 +112,9 @@ input[type=text]:focus{outline:none;border-color:var(--blue)}
 .reward{text-align:center}
 .reward .piece{display:inline-block;animation:pop .8s}
 main:has(.reward){max-width:1280px}
-.rw{display:grid;grid-template-columns:1fr 1.15fr;gap:32px;align-items:center;text-align:left;margin-top:6px}
+.rw{display:grid;grid-template-columns:1fr 1.15fr;gap:32px;align-items:center;text-align:left;margin-top:36px}
+.reward>h2{margin-bottom:0}
+.reward .rwb{margin-top:36px}
 .rw .l{text-align:center}
 .rw .skn{font-size:26px;font-weight:800;margin:6px 0 0}
 .rw .mini{display:flex;justify-content:center;gap:8px;margin-top:12px}
@@ -545,7 +547,7 @@ function rewardBlock(parent, i, o) {
       <div><div class="q">${o.lesson}</div>
         ${need ? '<div class="note">Còn một <u>Thử thách ẩn</u> cuối cùng đang chờ đội mình!</div>' : ""}
         ${o.hiddenDone ? '<div class="note">🏅 Đội mình đã hoàn thành Thử thách ẩn!</div>' : ""}</div></div>
-    <div style="margin-top:14px">${need
+    <div class="rwb">${need
       ? '<button class="btn" style="background:#8e44ad;box-shadow:0 5px 0 #6c3483" id="hd">⭐ Thử thách ẩn ▶</button>'
       : `<button class="btn green" id="nx">${o.label} ▶</button>`}</div></div>`);
   if (need) $("#hd", b).onclick = o.hidden; else $("#nx", b).onclick = o.next;
