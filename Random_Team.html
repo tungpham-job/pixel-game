@@ -94,7 +94,7 @@ select{width:100%;font:inherit;padding:9px 12px;border-radius:10px;border:2px so
   <div class="box" role="dialog" aria-label="Thiết lập">
     <h2><span>⚙️ Thiết lập</span><button id="x" aria-label="Đóng">✕</button></h2>
     <div class="fld"><label for="fx">Kiểu hiệu ứng</label>
-      <select id="fx"><option value="0">1. Băng chuyền</option><option value="1">2. Máy quay số</option><option value="2">3. Lồng quay xổ số</option><option value="3">4. Nam châm</option><option value="4">5. Giải mã ma trận</option></select></div>
+      <select id="fx"><option value="1">1. Máy quay số</option><option value="2">2. Lồng quay xổ số</option><option value="3">3. Nam châm</option><option value="4">4. Giải mã ma trận</option><option value="0">5. Băng chuyền</option></select></div>
     <div class="fld"><label for="sex">Cách chia theo giới tính</label>
       <select id="sex"><option value="sep">Nam nữ riêng</option><option value="mix">Nam nữ chung</option></select></div>
     <div class="fld"><label for="secs">Thời gian hiệu ứng</label>
@@ -122,8 +122,8 @@ function fitCols() {
   let w = 0; STU.forEach(s => { w = Math.max(w, c.measureText(s.name).width); });
   g.style.setProperty("--cw", Math.max(230, Math.ceil(w + 64)) + "px");
 }
-try { Object.assign(S, JSON.parse(localStorage.getItem("rt_settings3") || "null") || {}); } catch (e) {}
-const saveSet = () => { try { localStorage.setItem("rt_settings3", JSON.stringify(S)); } catch (e) {} };
+try { Object.assign(S, JSON.parse(localStorage.getItem("rt_settings4") || "null") || {}); } catch (e) {}
+const saveSet = () => { try { localStorage.setItem("rt_settings4", JSON.stringify(S)); } catch (e) {} };
 
 applyFs();
 /* ===== ĐỌC CSV ===== */
@@ -342,6 +342,7 @@ $("#go").onclick = () => {
   const first = $("#groups").firstElementChild; if (first) first.scrollIntoView({ block: "nearest" });
   runFx(S.fx, Math.max(1, S.secs) * 1000, () => setBusy(false));
 };
+window.addEventListener("beforeunload", e => { if ($("#groups").children.length) { e.preventDefault(); e.returnValue = ""; } });
 $("#gcount").addEventListener("keydown", e => { if (e.key === "Enter") $("#go").click(); });
 
 /* ===== KÉO THẢ THÀNH VIÊN (chuột và cảm ứng) ===== */
