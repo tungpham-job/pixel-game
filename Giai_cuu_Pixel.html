@@ -1070,9 +1070,7 @@ function hiddenChallenge(zi) {
   multiPick({
     zi, hidden: 1, title: Z.hidden.title, intro: narrator("happy", Z.hidden.text), endLabel: "Hoàn thành ▶",
     next() {
-      state.hd[zi] = true; good();
-      const s = screen(`<div class="card center"><h2>🏅 Giỏi quá! Đội mình hoàn thành Thử thách ẩn!</h2><button class="btn green" id="bk">Tiếp tục ▶</button></div>`);
-      $("#bk", s).onclick = () => zoneEnd(zi); setSkip(() => zoneEnd(zi));
+      state.hd[zi] = true; good(); zoneEnd(zi);
     }
   }, Z.hidden.m);
 }
