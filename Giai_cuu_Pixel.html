@@ -1247,6 +1247,15 @@ function rescue() {
   good(); setTimeout(() => tone([523, 659, 784, 1046, 784, 1046, 1318]), 350); confetti();
 }
 
+/* Khi hiện nút "Câu tiếp" (sau khi trả lời đúng): tự cuộn xuống cuối trang để dễ bấm */
+new MutationObserver(ms => {
+  for (const m of ms) for (const n of m.addedNodes) {
+    if (n.nodeType !== 1) continue;
+    const bt = n.matches && n.matches("button.btn") ? n : n.querySelector && n.querySelector("button.btn");
+    if (bt && /Câu tiếp/.test(bt.textContent)) { setTimeout(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" }), 250); return; }
+  }
+}).observe(document.body, { childList: true, subtree: true });
+
 /* Hỏi lại khi bấm F5 / đóng tab giữa chừng (từ lúc đội đã nhập tên đến khi giải cứu xong) */
 window.addEventListener("beforeunload", e => {
   if (state.team && !state.done) { e.preventDefault(); e.returnValue = ""; return ""; }
