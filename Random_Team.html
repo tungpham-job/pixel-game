@@ -61,6 +61,7 @@ input.gnote:focus{border-color:#f5c542;background:#fff8cc}
 .mem{display:flex;align-items:center;gap:8px;padding:7px 12px;border-top:1px solid var(--line);font-size:var(--mfs,19px);font-weight:600;user-select:none;cursor:grab;min-height:calc(var(--mfs,19px)*2.2)}
 .mem .grip{flex:none;width:12px;height:18px;background:radial-gradient(circle,#b9c6e0 1.6px,transparent 1.8px) 0 0/6px 6px;touch-action:none}
 .mem .mn{flex:1;min-width:0;white-space:nowrap}
+.mem.pinned .mn::after{content:" 📌";font-size:.7em}
 .mem.ph .mn{visibility:hidden}.mem.spin .mn{color:#8c97b0}.mem.pop{animation:pop .45s}
 .mem.dragging{opacity:.35}
 .ghost{position:fixed;z-index:200;pointer-events:none;background:#fff;border:2px solid var(--blue);border-radius:10px;box-shadow:0 10px 24px rgba(0,0,0,.25);transform:rotate(2deg)}
@@ -235,7 +236,8 @@ function divide(stu, G) {
     cand.forEach(i => { const n = groups[i].length; if (n < min) { min = n; best = [i]; } else if (n === min) best.push(i); });
     groups[best[Math.floor(Math.random() * best.length)]].push(...it.m);
   });
-  groups.forEach(g => shuffle(g));
+  stu.forEach(s => { s.fixed = pg(s) >= 0; });
+  groups.forEach(g => { shuffle(g); const f = g.filter(s => s.fixed).sort((a, b) => ALL.indexOf(a) - ALL.indexOf(b)); g.splice(0, g.length, ...f, ...g.filter(s => !s.fixed)); });
   return groups;
 }
 
@@ -249,7 +251,7 @@ function renderGroups(groups) {
     const d = document.createElement("div"); d.className = "grp"; d.style.setProperty("--bg", BG[i % 8]); d.style.setProperty("--fg", FG[i % 8]);
     d.innerHTML = `<div class="gh"><span class="gc" title="Số thành viên">${g.length}</span><div class="gtop"><span class="gn">${i + 1}</span><input type="text" class="gname" placeholder="Tên nhóm" maxlength="30" aria-label="Tên nhóm ${i + 1}"></div></div>
       <input type="text" class="gnote" placeholder="Ghi chú (điểm, nhận xét...)" maxlength="80" aria-label="Ghi chú nhóm ${i + 1}">
-      <ul class="glist">${g.map(s => `<li class="mem" data-name="${esc(s.name)}"><span class="grip"></span><span class="mn">${esc(s.name)}</span></li>`).join("")}</ul>`;
+      <ul class="glist">${g.map(s => `<li class="mem${s.fixed ? " pinned" : ""}" data-name="${esc(s.name)}"><span class="grip"></span><span class="mn">${esc(s.name)}</span></li>`).join("")}</ul>`;
     w.appendChild(d);
   });
   $("#xbtn").style.display = "inline-block";
@@ -299,11 +301,12 @@ const rnd = (a, b) => a + Math.random() * (b - a);
 const GL = "01#%$@ABCDEFXYZ<>/";
 
 function runFx(kind, T, done) {
-  const lis = [...document.querySelectorAll(".mem")], N = lis.length;
-  const rows = [...document.querySelectorAll(".glist")].map(l => [...l.children]), maxR = Math.max(...rows.map(r => r.length));
+  const lis = [...document.querySelectorAll(".mem:not(.pinned)")], N = lis.length;
+  const rows = [...document.querySelectorAll(".glist")].map(l => [...l.children].filter(c => !c.classList.contains("pinned"))), maxR = Math.max(...rows.map(r => r.length));
   const rr = []; for (let r = 0; r < maxR; r++) rows.forEach(g => { if (g[r]) rr.push(g[r]); });
   const names = STU.map(s => s.name);
   R = { timers: [], anims: [], raf: 0, done };
+  if (!N) { at(300, finishFx); return; }
   lis.forEach(l => l.classList.add("ph"));
   $("#skip").style.display = "block";
   const W = innerWidth, H = innerHeight, sp = n => (n <= 1 ? 0 : 1 / (n - 1));
