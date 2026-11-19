@@ -201,6 +201,9 @@ main:has(.rescue),main:has(.asmcard){max-width:1280px}
 .asm .assemble{transition:gap 2.6s ease-in-out}
 .asm .kq .w{opacity:0;transform:translateY(8px);display:inline-block;transition:opacity .35s,transform .35s}
 .asm .kq .w.on{opacity:1;transform:none}
+.late{opacity:0;visibility:hidden;transition:opacity .5s}.late.on{opacity:1;visibility:visible}
+.rw .q .w{opacity:0;transform:translateY(8px);display:inline-block;transition:opacity .35s,transform .35s}
+.rw .q .w.on{opacity:1;transform:none}
 .gtt{font-size:46px;color:#6d4c41;margin:0 0 6px;font-weight:800}
 @media(max-width:900px){.asm{grid-template-columns:1fr;text-align:center}.asm .kq{font-size:24px;min-height:0}}
 .rescue{position:relative;overflow:hidden;background:none;box-shadow:none;color:var(--ink);text-align:center;padding:18px 10px 24px;min-height:560px}
@@ -509,6 +512,27 @@ function textChoice(parent, cfg) {
   });
 }
 
+/* Chữ chạy ra từng từ (giữ nguyên thẻ b/u/span bên trong) */
+function wrapWords(el) {
+  const walk = n => {
+    [...n.childNodes].forEach(c => {
+      if (c.nodeType === 3) {
+        const f = document.createDocumentFragment();
+        c.textContent.split(/(\s+)/).forEach(t => {
+          if (!t) return;
+          if (/^\s+$/.test(t)) f.appendChild(document.createTextNode(t));
+          else { const w = document.createElement("span"); w.className = "w"; w.textContent = t; f.appendChild(w); }
+        });
+        c.replaceWith(f);
+      } else if (c.nodeType === 1) walk(c);
+    });
+  };
+  walk(el); return el.querySelectorAll(".w");
+}
+async function revealWords(el, gap = 260) {
+  for (const w of wrapWords(el)) { w.classList.add("on"); await wait(gap); }
+}
+
 /* ===== PHẦN THƯỞNG ===== */
 function rewardBlock(parent, i, o) {
   const first = !state.keys[i]; state.keys[i] = true; renderKeys(first ? i : undefined);
@@ -525,6 +549,9 @@ function rewardBlock(parent, i, o) {
       ? '<button class="btn" style="background:#8e44ad;box-shadow:0 5px 0 #6c3483" id="hd">⭐ Thử thách ẩn ▶</button>'
       : `<button class="btn green" id="nx">${o.label} ▶</button>`}</div></div>`);
   if (need) $("#hd", b).onclick = o.hidden; else $("#nx", b).onclick = o.next;
+  const late = [...b.querySelectorAll(".note"), b.lastElementChild.lastElementChild];
+  late.forEach(e => e.classList.add("late"));
+  (async () => { await wait(500); await revealWords($(".q", b)); await wait(300); late.forEach(e => e.classList.add("on")); })();
 }
 
 /* ===== TIỆN ÍCH CHO CÂU HỎI ===== */
@@ -1193,11 +1220,10 @@ async function assemble() {
   setSkip(gate);
   const alive = () => true;
   await wait(900); if (!alive()) return;
-  $("#as", s).classList.add("joined"); await wait(2900); if (!alive()) return;
+  $("#as", s).classList.add("joined"); await wait(2650);
   good(); setTimeout(() => tone([880, 1100, 1320]), 300);
   const W = t => t.split(" ").map(w => `<span class="w">${w}</span>`).join(" ");
   $("#kq", s).innerHTML = `${W("“3 mảnh ghép lại là 3 kỹ năng tự bảo vệ của các em.")}<br><span class="qr">${W("Chiếc chìa khóa này không mở cửa bằng sức mạnh, mà bằng sự hiểu biết.”")}</span>`;
-  await wait(500);
   for (const w of s.querySelectorAll(".w")) { if (!alive()) return; w.classList.add("on"); await wait(260); }
   await wait(400); if (!alive()) return;
   $("#after", s).innerHTML = `<button class="btn green" id="g">Đến cổng cuối ▶</button>`;
