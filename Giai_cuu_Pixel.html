@@ -384,7 +384,7 @@ function actionBlock(parent, cfg) {
 
 /* ===== MÀN 0: GIỚI THIỆU ===== */
 function intro() {
-  state.keys = [false, false, false]; state.hd = [false, false, false]; renderKeys(); state.team = ""; state.members = []; renderTeam();
+  state.keys = [false, false, false]; state.hd = [false, false, false]; renderKeys(); state.team = ""; state.members = []; state.done = false; renderTeam();
   const s = screen(`<div class="card">
     ${narrator("worried", `<h1>Hành trình giải cứu Pixel</h1>Pixel, chú robot nhỏ, bị lạc trong <b>Mê cung mạng</b>! Để giải cứu Pixel, đội mình sẽ đi qua <b>3 vùng</b>, mỗi vùng nhận <b>1 mảnh chìa khóa</b>. Ghép đủ 3 mảnh thành chìa khóa để mở cổng cuối.`, true)}
     <h3 style="margin-top:20px">Ba bí quyết tự bảo vệ</h3>
@@ -1205,6 +1205,7 @@ function downloadCert() {
   });
 }
 function rescue() {
+  state.done = true;
   const sk = (cls, ic, txt) => `<div class="sk ${cls}"><span style="font-size:24px">${ic}</span>${esc(txt)}</div>`;
   const s = screen(`<div class="card rescue"><canvas class="fwcv"></canvas><div class="rs-in">
     <div class="rs-sub">${esc("Biệt đội " + state.team)}</div>
@@ -1229,6 +1230,11 @@ function fitZoom() {
   root.style.setProperty("--vhpx", z === 1 ? "100vh" : Math.round(window.innerHeight * z) + "px");
 }
 fitZoom(); window.addEventListener("resize", fitZoom);
+
+/* Hỏi lại khi bấm F5 / đóng tab giữa chừng (từ lúc đội đã nhập tên đến khi giải cứu xong) */
+window.addEventListener("beforeunload", e => {
+  if (state.team && !state.done) { e.preventDefault(); e.returnValue = ""; return ""; }
+});
 
 /* ===== KHỞI ĐỘNG (hỗ trợ viên có thể nhảy nhanh: #g1 #g2 #g3 #gate) ===== */
 (function start() {
