@@ -239,7 +239,7 @@ main:has(.rescue),main:has(.asmcard){max-width:1280px}
 .mchip button{border:0;background:#cfe3f8;color:#0c447c;width:26px;height:26px;border-radius:50%;font-weight:800;line-height:1;padding:0}
 .mchip button:hover{background:#f4b6b3;color:#7a1414}
 .mhint{color:var(--soft);font-size:15px;margin:6px 0 0}.merr{color:var(--red);font-weight:700;min-height:24px;margin:4px 0 0}
-.tm{font-size:13px;font-weight:600;color:var(--soft)}
+.tm{font-size:13px;font-weight:600;color:var(--soft);line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -339,7 +339,7 @@ function renderKeys(popIdx) {
     `<div class="slot ${on ? "on" : ""} ${i === popIdx ? "pop" : ""}"><div class="box">${on ? piece(i, 42) : "?"}</div>${on ? esc(SKILLS[i]) : "Mảnh " + (i + 1)}</div>`).join("");
 }
 function renderTeam() {
-  $("#teamName").innerHTML = state.team ? esc("Biệt đội " + state.team) + (state.members.length ? `<div class="tm">${state.members.map(esc).join(" · ")}</div>` : "") : "";
+  $("#teamName").innerHTML = state.team ? esc("Biệt đội " + state.team) + (state.members.length ? `<div class="tm" title="${esc(state.members.join(", "))}">${state.members.map(esc).join(" · ")}</div>` : "") : "";
 }
 function thanksNames() {
   const m = state.members;
@@ -441,12 +441,11 @@ function intro() {
   const mi = $("#mi", s);
   const drawChips = () => {
     $("#chips", s).innerHTML = members.map((m, i) => `<span class="mchip">${esc(m)}<button data-i="${i}" aria-label="Xóa ${esc(m)}">✕</button></span>`).join("");
-    const full = members.length >= 3; mi.style.display = full ? "none" : "";
-    mi.placeholder = members.length ? "Thêm tên…" : "Gõ tên từng bạn rồi bấm Enter";
-    $("#mh", s).textContent = full ? "Đã đủ 3 bạn. Bấm ✕ nếu muốn đổi tên." : "Mỗi tên là một thẻ, bấm ✕ để xóa. Tối đa 3 bạn.";
+        mi.placeholder = members.length ? "Thêm tên…" : "Gõ tên từng bạn rồi bấm Enter";
+    $("#mh", s).textContent = "Mỗi tên là một thẻ, bấm ✕ để xóa. Nhập bao nhiêu bạn cũng được." + (members.length ? " Hiện có " + members.length + " bạn." : "");
   };
   const addName = raw => {
-    raw.split(",").map(x => x.trim()).filter(Boolean).forEach(n => { if (members.length < 3) members.push(n); });
+    raw.split(",").map(x => x.trim()).filter(Boolean).forEach(n => members.push(n));
     mi.value = ""; $("#me", s).textContent = ""; drawChips();
   };
   const finish = () => {
@@ -1323,11 +1322,24 @@ function downloadCert() {
   let size = 96; g.font = `800 ${size}px ${ff}`;
   while (g.measureText(state.team).width > W - 500 && size > 44) { size -= 4; g.font = `800 ${size}px ${ff}`; }
   txt(state.team, W / 2, 555, size, "#185fa5", 800);
-  if (state.members.length) txt(state.members.join("  ·  "), W / 2, 640, 42, "#1d2a44", 700);
-  txt("Đã hoàn thành Hành trình giải cứu Pixel", W / 2, 730, 46, "#1d2a44", 600);
-  txt("và nắm vững 3 bí quyết tự bảo vệ trên mạng", W / 2, 795, 46, "#1d2a44", 600);
+  let dy = 0;
+  if (state.members.length) {
+    const maxW = W - 300, wrap = fs => {
+      g.font = `700 ${fs}px ${ff}`; const out = []; let cur = "";
+      state.members.forEach(n => { const t = cur ? cur + "  ·  " + n : n; if (cur && g.measureText(t).width > maxW) { out.push(cur); cur = n; } else cur = t; });
+      if (cur) out.push(cur); return out;
+    };
+    /* Giữ khối chữ gọn để không đè lên hình Pixel ở dưới: chữ nhỏ dần khi nhiều tên */
+    let fs = 42, lines = wrap(fs);
+    while ((lines.length - 1) * fs * 1.25 > 60 && fs > 18) { fs -= 2; lines = wrap(fs); }
+    const lh = Math.round(fs * 1.25), y0 = lines.length > 1 ? 615 : 640;
+    lines.forEach((ln, i) => txt(ln, W / 2, y0 + i * lh, fs, "#1d2a44", 700));
+    dy = Math.max(0, y0 + (lines.length - 1) * lh + 90 - 730);
+  }
+  txt("Đã hoàn thành Hành trình giải cứu Pixel", W / 2, 730 + dy, 46, "#1d2a44", 600);
+  txt("và nắm vững 3 bí quyết tự bảo vệ trên mạng", W / 2, 795 + dy, 46, "#1d2a44", 600);
   [["DỪNG", "#e24b4a"], ["CHẶN", "#ba7517"], ["KỂ", "#3b6d11"]].forEach(([s, col], i) => {
-    const x = W / 2 + (i - 1) * 250, y = 860; g.fillStyle = col; g.beginPath(); g.roundRect(x - 105, y, 210, 72, 36); g.fill();
+    const x = W / 2 + (i - 1) * 250, y = 860 + dy; g.fillStyle = col; g.beginPath(); g.roundRect(x - 105, y, 210, 72, 36); g.fill();
     txt(s, x, y + 51, 38, "#fff", 800);
   });
   const d = new Date(), ds = String(d.getDate()).padStart(2, "0") + "/" + String(d.getMonth() + 1).padStart(2, "0") + "/" + d.getFullYear();
